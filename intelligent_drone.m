@@ -1,12 +1,17 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%G³ówne okno programu wraz z g³ówn¹ pêtl¹ do while w której uruchamiane
+%bêd¹ poszczególne funkcje programu
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 drone = struct %deklaracja struktury (dron bêdzie stuktur¹ przechowuj¹c¹ informacjê 
 % o jego po³o¿eniu, wysokoœci, prêdkoœci, energii, zasiêgu czujnika)
 
 %1. Parametryzacja parametrów H,N (wysokoœæ, szerokoœæ , g³êbokoœæ)
 
-H %wysokoœæ
+H = 10 %wysokoœæ
 
-N %szerokoœæ, g³êbokoœæ
+N = 10 %szerokoœæ, g³êbokoœæ
 
 %Pozycja pocz¹tkowa jako struktura (x,y,z)
 
@@ -25,7 +30,7 @@ drone.speed = initial_speed; %przypisanie do prêdkoœci drona wartoœci zainicjali
 
 drone.energy = initial_energy; %przypisanie do energii drona wartoœci zainicjalizowanej
 
-drone.sensor_range %zasiêg czujnika (na ile komórek dron widzi w przód)
+drone.sensor_range = 3; %zasiêg czujnika (na ile komórek dron widzi w przód)
 
 %pozycja pilota bêd¹ca struktur¹ (przechowuj¹c¹ wspó³rzêdne)
 
@@ -52,17 +57,17 @@ predicates = struct %predykaty bêd¹ strukturami z przyjêtymi parametrami zdanie 
 % miejscu jestesmy (sprawdzane co turê (krok symulacji))
 
 moves_and_states = struct; %ruchy i stan bêdzie to struktura przechowuj¹ca ruch, jaki zrobi³ dron oraz jego aktualny stan
-simulation_time = 0; %czas symulacji -- parametr inkrementowany po ka¿dym ruchu, aby móc obrazowaæ póŸniej przejœcie krok po kroku drona)
+simulation_time = 1; %czas symulacji -- parametr inkrementowany po ka¿dym ruchu, aby móc obrazowaæ póŸniej przejœcie krok po kroku drona)
 
-while ( drone.energy > 0  && drone.if_return_to_start != true ) %dopóki energia drona jest >0 i nie powróci³ do pozycji pocz¹tkowej
-        cube_to_pass = environment( drone.position.x - drone.sensors_range:drone.position.x + drone.sensors_range
-                                    drone.position.y - drone.sensors_range:drone.position.x + drone.sensors_range
-                                    drone.position.z - drone.sensors_range:drone.position.x + drone.sensors_range ) %zapisanie wycinka œrodowiska, który bêdzie nas interesowa³, przy analizie kolejnego jego ruchu
-    predicates = detect_danger(drone.position, cube_to_pass) %wykryj zagro¿enie aktualizujemy wartosci predykatow za pomoc¹ parametru pozycji drona oraz drogi do przejœcia
+while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia drona jest >0 i nie powróci³ do pozycji pocz¹tkowej
+    [x_start, x_end, y_start, y_end, z_start, z_end] = check_coordinates(drone, N, H);
+    
+    cube_to_pass = environment( x_start:x_end, y_start:y_end, z_start:z_end); %zapisanie wycinka œrodowiska, który bêdzie nas interesowa³, przy analizie kolejnego jego ruchu
+    predicates = detect_danger(drone.position, cube_to_pass); %wykryj zagro¿enie aktualizujemy wartosci predykatow za pomoc¹ parametru pozycji drona oraz drogi do przejœcia
     %pocz¹tek tworzenia bazy wiedzy (odpowiada to funkcji TELL - baza
     %wiedzy bêdzie siê zmieniaæ w ka¿dym kroku symulacji
     
-    move_to_make, drone_state = inference(predicates, drone); 
+    [move_to_make, drone_state] = inference(predicates, drone); 
     % funkcja odpowiedzialna za pobranie aktualnych predykatów oraz
     % parametrów drona (przypisuje do zmiennych ruch do zrobienia i
     % aktualny po³o¿enie drona)
@@ -76,7 +81,8 @@ while ( drone.energy > 0  && drone.if_return_to_start != true ) %dopóki energia 
     drone = move_drone(drone, move_to_make); %funkcja odpowiedzialna za poruszanie dronem
     %przyjmuje informacje o dronie oraz ruchu do przejœcia (aktualizacja
     %parametrów drona)
-    drone = take_drone_energy(drone, move_to_make); %funkcja odpowiedzialna za pobranie energii drona
+    
+    %drone = take_drone_energy(drone, move_to_make); %funkcja odpowiedzialna za pobranie energii drona
     %ile jej uby³o po wykonaniu ruchu
     
     moves_and_states.moves(simulation_time) = move_to_make;
@@ -110,5 +116,34 @@ analyze_results(drone, simulation_time); %analiza rezultatów (dron w czasie)
 %Za³o¿enie pocz¹tkowe przód ty³ prawo lewo
 
     
-    
+   %% baza wiedzy
+   
+   %1.w bazie wiedzy musimy miec warunek ze jak znajdujemy sie nad pilotem
+   %jezeli jestem na pilotem i jestesm wyzej niz minimalna wysokosc to
+   %wtedy w dol
+   %2. Zrzucono ladunek -> powrot do miejsca startu
+   %3. Caly czas porusza sie przed siebie chyba ze jest jakies zagrozenie
+   %Jesli nie jestes pod dzialaniem zagrozenia i jestes nad dronem to wtedy
+   %ruch w przod
+   %4. Jezeli po zrobieniu kroku w przodu znalezlismy sie pod dzialaniem radaru to albo w lewo albo w prawo
+   %5. Jezeli po zrobieniu kroku w przodu znalezlismy sie pod dzialaniem
+   %wystrzalu to albo w lewo albo w prawo albo w gore
+   %5. Czy pole dzialania radaru nie konczy sie szybciej w prawo czy w lewo
+   %6. Probujemy zawsze isc w prawo a jak sie nie uda to w lewo
+   %7. Zestaw ograniczen na to ze dron jest w srodowisku
+   %(sytuacje w ktorych dojechal do konca osrodka)
+   %Czy jest na prawej, gornej granicy, dolnej, lewej (sprawdzanie
+   %wspolrzednych)
+   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%System wnioskowania
+
+
+   
+  
+   
+   
+   
+   
 
