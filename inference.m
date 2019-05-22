@@ -4,7 +4,7 @@
 %parametrów drona (przypisuje do zmiennych ruch do zrobienia i aktualny
 %po³o¿enie drona)-odpowiada to funkcji ASK pytamy sie czy jesteœmy pod
 %dzia³aniem radaru b¹dŸ broni
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%gi
 
 function [move_to_make, drone_state] = inference(predicates, drone)
     baza_wiedzy = struct; %baza wiedzy bedzie struktura
