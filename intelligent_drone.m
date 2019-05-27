@@ -17,10 +17,11 @@ N = 10 %szerokoœæ, g³êbokoœæ
 
 initial_position = struct
 initial_position.x = 3;
-initial_position.y = 3;
-initial_position.z = 3;
+initial_position.y = 5;
+initial_position.z = 7;
 
 drone.position = initial_position %inicjalizacja wartoœci¹ pocz¹tkow¹ pozycji drona
+drone.initial_position = initial_position;
 
 initial_speed = 2; % inicjalizacja wartoœci¹ pocz¹tkow¹ prêdkoœci
 
@@ -30,15 +31,15 @@ drone.speed = initial_speed; %przypisanie do prêdkoœci drona wartoœci zainicjali
 
 drone.energy = initial_energy; %przypisanie do energii drona wartoœci zainicjalizowanej
 
-drone.sensor_range = 3; %zasiêg czujnika (na ile komórek dron widzi w przód)
+drone.sensors_range = 3; %zasiêg czujnika (na ile komórek dron widzi w przód)
 
 %pozycja pilota bêd¹ca struktur¹ (przechowuj¹c¹ wspó³rzêdne)
 
 pilot_position= struct
 
-pilot_position.x =1;
+pilot_position.x = 3;
 
-pilot_position.y =2;
+pilot_position.y = 5;
 
 pilot_position.z = H/10; %obni¿enie siê do wysokoœci 0.1 H w celu zrzucenia zaopatrzenia
 drone.pilot_position = pilot_position; %przypisanie do pola pilot_position w strukturze dron po³o¿enia pilota
@@ -48,7 +49,9 @@ drone.pilot_position_achieved=false; %pozycja pilota osi¹gniêta (pocz¹tkowo usta
 drone.if_return_to_start = false; %parametr czy powróci³ do startu (pozycji startowej)
 
 environment = zeros(N, N, H); %inicjalizacja œrodowiska o wymiarach NxNxH
-environment(3:5, 4:6, 5:7) = 'r'; %(od 3 do 5, od 4 do 6, od 5 do 7) %wstawienie do pól konkretnych zakresów literki 'r',która bêdzie oznaczaæ, ¿e w tych miejscach znajdowaæ siê bêdzie radar
+
+environment = initialize_guns_and_radars(environment);
+
 predicates = struct %predykaty bêd¹ strukturami z przyjêtymi parametrami zdanie oraz wartoœæ logiczna
 %predicates.q = "Radar detected"/"Gun detected" // zdanie
 %predicates.value = true/false; //wartoœæ logiczna
@@ -59,11 +62,22 @@ predicates = struct %predykaty bêd¹ strukturami z przyjêtymi parametrami zdanie 
 moves_and_states = struct; %ruchy i stan bêdzie to struktura przechowuj¹ca ruch, jaki zrobi³ dron oraz jego aktualny stan
 simulation_time = 1; %czas symulacji -- parametr inkrementowany po ka¿dym ruchu, aby móc obrazowaæ póŸniej przejœcie krok po kroku drona)
 
+predicates = struct;
+
 while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia drona jest >0 i nie powróci³ do pozycji pocz¹tkowej
-    [x_start, x_end, y_start, y_end, z_start, z_end] = check_coordinates(drone, N, H);
+    %%TODO ruch w gore: 
+    %%-reguly w bazie wiedzy, pierwszenstwo w funkcji
+    %%calculate_optimal_path
+    %%-"if y " w detect_danger_backward_orientation -> czyli fakty
+    %%niedopytywalne odnosnie wykrywania gun-a i radarów
+    %[x_start, x_end, y_start, y_end, z_start, z_end] = check_coordinates(drone, N, H); 
     
-    cube_to_pass = environment( x_start:x_end, y_start:y_end, z_start:z_end); %zapisanie wycinka œrodowiska, który bêdzie nas interesowa³, przy analizie kolejnego jego ruchu
-    predicates = detect_danger(drone.position, cube_to_pass); %wykryj zagro¿enie aktualizujemy wartosci predykatow za pomoc¹ parametru pozycji drona oraz drogi do przejœcia
+    %[cube_to_pass, drone_relative_position] = environment( x_start:x_end, y_start:y_end, z_start:z_end); %zapisanie wycinka œrodowiska, który bêdzie nas interesowa³, przy analizie kolejnego jego ruchu
+    [predicates, drone] = check_pilot_presence(drone, pilot_position, predicates);
+    [optimal_path, predicates] = calculate_optimal_path(drone, predicates);
+    
+    predicates = detect_danger(drone, environment, optimal_path, predicates); %wykryj zagro¿enie aktualizujemy wartosci predykatow za pomoc¹ parametru pozycji drona oraz drogi do przejœcia
+
     %pocz¹tek tworzenia bazy wiedzy (odpowiada to funkcji TELL - baza
     %wiedzy bêdzie siê zmieniaæ w ka¿dym kroku symulacji
     
@@ -93,6 +107,7 @@ while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia 
      %zbieranie wyników dla czasu symulacji w wektorze (stany) aby póŸniej
     %móc je wyœwietliæ
     
+    [predicates, drone] = check_finish_conditions(drone, predicates);
     simulation_time = simulation_time + 1; %inkrementacja czasu symulacji po ka¿dym przejœciu pêtli
 end
 plot_simulation(environment, drone, moves_and_states); % prezentacja wyników po zebraniu symulacji
