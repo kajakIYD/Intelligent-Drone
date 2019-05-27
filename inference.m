@@ -26,42 +26,69 @@ function [move_to_make, drone_state] = inference(predicates, drone)
     C.nazwa = 'C'; %'Spusc ladunek';
     C.wartosc = false;
     C.jest_ustawiony = false;
-    D = struct;
-    D.nazwa = 'D'; %'Powrot do miejsca startu';
-    D.wartosc = false;
-    D.jest_ustawiony = false;
-    E = struct;
-    E.nazwa = 'E'; %'ruch_w_przod';
-    E.wartosc = false;
-    E.jest_ustawiony = false;
-    F = struct;
-    F.nazwa = 'F'; %'radar_wykryty';
-    F.wartosc = true;
-    F.jest_ustawiony = true;
-    nF = struct;
-    nF.nazwa = 'nF'; %'radar_nie_wykryty';
-    nF.wartosc = false;
-    nF.jest_ustawiony = true;
-    G = struct;
-    G.nazwa = 'G'; %'ruch_w_prawo';
-    G.wartosc = false;
-    G.jest_ustawiony = false; 
+    
+    
+    
+    MF = struct;
+    MF.nazwa = 'MF'; %'ruch_w_przod';
+    MF.wartosc = false;
+    MF.jest_ustawiony = false;
 
-    baza_wiedzy.reguly(1).przeslanki = [A, B]; %wektor predykatow A, B
-    baza_wiedzy.reguly(1).konkluzja = C;  % C
-    baza_wiedzy.reguly(2).przeslanki = [A C]; %wektor predykatow A, C
-    baza_wiedzy.reguly(2).konkluzja = D;  % D
-    baza_wiedzy.reguly(3).przeslanki = [B C]; %wektor predykatow B, C
-    baza_wiedzy.reguly(3).konkluzja = E;  % D
-    baza_wiedzy.reguly(4).przeslanki = [F]; %wektor predykatow F
-    baza_wiedzy.reguly(4).konkluzja = G;  % G
-    baza_wiedzy.reguly(5).przeslanki = [nF]; %wektor predykatow nF (not F)- zaprzeczenie
-    baza_wiedzy.reguly(5).konkluzja = E;  % G
-    % A, B -> C
-    % A, C -> D
-    % B, C -> E
-    % F -> G
-    % nF -> E
+    MR = struct;
+    MR.nazwa = 'MR'; %'ruch_w_prawo';
+    MR.wartosc = false;
+    MR.jest_ustawiony = false; 
+    
+    ML = struct;
+    ML.nazwa = 'ML'; %'ruch_w_lewo';
+    ML.wartosc = false;
+    ML.jest_ustawiony = false; 
+    
+    MD = struct;
+    MD.nazwa = 'MD'; %'ruch_w_dol';
+    MD.wartosc = false;
+    MD.jest_ustawiony = false; 
+    
+    MB = struct;
+    MB.nazwa = 'MB'; %'ruch_do_tylu';
+    MB.wartosc = false;
+    MB.jest_ustawiony = false;
+    
+    DL = struct;
+    DL.nazwa = 'DL'; %'DLoad';
+    DL.wartosc = false;
+    DL.jest_ustawiony = false; 
+
+    nDL = struct;
+    nDL.nazwa = 'nDL'; %'nDLoad';
+    nDL.wartosc = false;
+    nDL.jest_ustawiony = false; 
+    
+    baza_wiedzy.reguly(1).przeslanki = [predicates.POP]; %wektor predykatow nF (not F)- zaprzeczenie
+    baza_wiedzy.reguly(1).konkluzja = DL;  % DropLoad - zrzuc ladunek
+    baza_wiedzy.reguly(2).przeslanki = [predicates.nPOP]; %wektor predykatow nF (not F)- zaprzeczenie
+    baza_wiedzy.reguly(2).konkluzja = nDL;  % DropLoad - zrzuc ladunek
+    baza_wiedzy.reguly(3).przeslanki = [predicates.nRS, predicates.MF_p, nDL];
+    baza_wiedzy.reguly(3).konkluzja = MF;
+    baza_wiedzy.reguly(4).przeslanki = [predicates.nRR, predicates.MR_p, nDL]; 
+    baza_wiedzy.reguly(4).konkluzja = MR;
+    baza_wiedzy.reguly(5).przeslanki = [predicates.nRL, predicates.ML_p, nDL]; 
+    baza_wiedzy.reguly(5).konkluzja = ML;
+    baza_wiedzy.reguly(6).przeslanki = [predicates.nRD, predicates.MD_p, nDL]; 
+    baza_wiedzy.reguly(6).konkluzja = MD;
+    baza_wiedzy.reguly(7).przeslanki = [predicates.nRS, predicates.MF_p, DL];
+    baza_wiedzy.reguly(7).konkluzja = MB;
+    baza_wiedzy.reguly(8).przeslanki = [predicates.nRR, predicates.MR_p, DL]; 
+    baza_wiedzy.reguly(8).konkluzja = ML;
+    baza_wiedzy.reguly(9).przeslanki = [predicates.nRL, predicates.ML_p, DL]; 
+    baza_wiedzy.reguly(9).konkluzja = MR;
+    baza_wiedzy.reguly(10).przeslanki = [predicates.nRD, predicates.MD_p]; 
+    baza_wiedzy.reguly(10).konkluzja = MD;
+    
+    
+    %%Orientacja sprawdzania czujnikow zmienia sie po osiagnieciu pilota
+    %%Natomiast orientacja ruchowa siê nie zmienia
+    
     konkluzje_z_bazy_wiedzy = []; %bufor na konkluzje z bazy wiedzy
     for regula = baza_wiedzy.reguly %dla wszystkich regul w bazie wiedzy
         konkluzja_juz_w_wektorze = false; %poczatkowe ustawienie flagi konkluzja_juz_w_wektorze na false
@@ -107,7 +134,7 @@ function [move_to_make, drone_state] = inference(predicates, drone)
                         if(strcmp(podprzeslanka.nazwa, regula.konkluzja.nazwa))
                             baza_wiedzy.reguly(podlicznik_regul).przeslanki(licznik_podprzeslanek).wartosc = result;
                             baza_wiedzy.reguly(podlicznik_regul).przeslanki(licznik_podprzeslanek).jest_ustawiony = true;
-                            break;
+%                             break;
                         end
                         licznik_podprzeslanek = licznik_podprzeslanek + 1;
                     end
@@ -151,33 +178,46 @@ function [move_to_make, drone_state] = inference(predicates, drone)
     end
 
     %%Sprawdz wartosc logiczna predykatow "odpowiedzialnych za ruch"
-    move_predicates = [baza_wiedzy.reguly(4).konkluzja, baza_wiedzy.reguly(5).konkluzja];
+    move_predicates = [baza_wiedzy.reguly(3).konkluzja, baza_wiedzy.reguly(4).konkluzja, baza_wiedzy.reguly(5).konkluzja, baza_wiedzy.reguly(6).konkluzja, baza_wiedzy.reguly(7).konkluzja];
     
     move_to_make = struct;
     move_to_make.x = 0;
     move_to_make.y = 0;
     move_to_make.z = 0;
     for predicate = move_predicates
-        if (strcmp(predicate.nazwa, 'E') == true && predicate.wartosc == true)
+        if (strcmp(predicate.nazwa, 'MF') == true && predicate.wartosc == true)
             %%Ruch w przod
             move_to_make.y = 1; %binarna informacja ( w ktora strone sie ruszyc) 
         end
-        if (strcmp(predicate.nazwa, 'G') == true && predicate.wartosc == true)
+        if (strcmp(predicate.nazwa, 'MB') == true && predicate.wartosc == true)
+            %%Ruch do tylu
+            move_to_make.y = 1; %binarna informacja ( w ktora strone sie ruszyc) 
+        end
+        if (strcmp(predicate.nazwa, 'MR') == true && predicate.wartosc == true)
             %%Ruch w prawo
             move_to_make.x = 1;
         end
+        if (strcmp(predicate.nazwa, 'ML') == true && predicate.wartosc == true)
+            %%Ruch w lewo
+            move_to_make.x = -1;
+        end
+        if (strcmp(predicate.nazwa, 'MD') == true && predicate.wartosc == true)
+            %%Ruch w dol
+            move_to_make.z = -1;
+        end
     end
+    
     
     drone_state_predicates = [baza_wiedzy.reguly(4).przeslanki]; 
     drone_state = struct;
     drone_state.radar_detected = false;
     drone_state.gun_detected = false;
     for predicate = drone_state_predicates
-        if (strcmp(predicate.nazwa, 'F') == true && predicate.wartosc == true)
+        if (strcmp(predicate.nazwa, 'RD') == true && predicate.wartosc == true)
             %%Radar wykryty
-            drone_state = true; %informacja o tym ze radar wykryty
+            drone_state.radar_detected = true; %informacja o tym ze radar wykryty
         end
-        if (strcmp(predicate.nazwa, 'X') == true && predicate.wartosc == true)
+        if (strcmp(predicate.nazwa, 'GD') == true && predicate.wartosc == true)
             %%Gun wykryty
             drone_state.gun_detected = true;
         end
