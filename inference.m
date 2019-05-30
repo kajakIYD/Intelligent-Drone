@@ -49,6 +49,12 @@ function [move_to_make, drone_state] = inference(predicates, drone)
     MD.wartosc = false;
     MD.jest_ustawiony = false; 
     
+    MU = struct;
+    MU.nazwa = 'MU'; %'ruch_w_gore';
+    MU.wartosc = false;
+    MU.jest_ustawiony = false; 
+    
+    
     MB = struct;
     MB.nazwa = 'MB'; %'ruch_do_tylu';
     MB.wartosc = false;
@@ -70,20 +76,17 @@ function [move_to_make, drone_state] = inference(predicates, drone)
     baza_wiedzy.reguly(2).konkluzja = nDL;  % DropLoad - zrzuc ladunek
     baza_wiedzy.reguly(3).przeslanki = [predicates.nRS, predicates.MF_p, nDL];
     baza_wiedzy.reguly(3).konkluzja = MF;
-    baza_wiedzy.reguly(4).przeslanki = [predicates.nRR, predicates.MR_p, nDL]; 
-    baza_wiedzy.reguly(4).konkluzja = MR;
-    baza_wiedzy.reguly(5).przeslanki = [predicates.nRL, predicates.ML_p, nDL]; 
-    baza_wiedzy.reguly(5).konkluzja = ML;
-    baza_wiedzy.reguly(6).przeslanki = [predicates.nRD, predicates.MD_p, nDL]; 
-    baza_wiedzy.reguly(6).konkluzja = MD;
-    baza_wiedzy.reguly(7).przeslanki = [predicates.nRS, predicates.MF_p, DL];
-    baza_wiedzy.reguly(7).konkluzja = MB;
-    baza_wiedzy.reguly(8).przeslanki = [predicates.nRR, predicates.MR_p, DL]; 
-    baza_wiedzy.reguly(8).konkluzja = ML;
-    baza_wiedzy.reguly(9).przeslanki = [predicates.nRL, predicates.ML_p, DL]; 
-    baza_wiedzy.reguly(9).konkluzja = MR;
-    baza_wiedzy.reguly(10).przeslanki = [predicates.nRD, predicates.MD_p]; 
-    baza_wiedzy.reguly(10).konkluzja = MD;
+    baza_wiedzy.reguly(4).przeslanki = [predicates.nRS, predicates.MB_p, DL];
+    baza_wiedzy.reguly(4).konkluzja = MB;
+    baza_wiedzy.reguly(5).przeslanki = [predicates.nRR, predicates.MR_p]; 
+    baza_wiedzy.reguly(5).konkluzja = MR;
+    baza_wiedzy.reguly(6).przeslanki = [predicates.nRL, predicates.ML_p]; 
+    baza_wiedzy.reguly(6).konkluzja = ML;
+    baza_wiedzy.reguly(7).przeslanki = [predicates.nRU, predicates.MU_p]; 
+    baza_wiedzy.reguly(7).konkluzja = MU;
+    baza_wiedzy.reguly(8).przeslanki = [predicates.nRD, predicates.MD_p];
+    baza_wiedzy.reguly(8).konkluzja = MD;
+    
     
     
     %%Orientacja sprawdzania czujnikow zmienia sie po osiagnieciu pilota
@@ -178,7 +181,7 @@ function [move_to_make, drone_state] = inference(predicates, drone)
     end
 
     %%Sprawdz wartosc logiczna predykatow "odpowiedzialnych za ruch"
-    move_predicates = [baza_wiedzy.reguly(3).konkluzja, baza_wiedzy.reguly(4).konkluzja, baza_wiedzy.reguly(5).konkluzja, baza_wiedzy.reguly(6).konkluzja, baza_wiedzy.reguly(7).konkluzja];
+    move_predicates = [baza_wiedzy.reguly(3).konkluzja, baza_wiedzy.reguly(4).konkluzja, baza_wiedzy.reguly(5).konkluzja, baza_wiedzy.reguly(6).konkluzja, baza_wiedzy.reguly(7).konkluzja, baza_wiedzy.reguly(8).konkluzja];
     
     move_to_make = struct;
     move_to_make.x = 0;
@@ -191,7 +194,7 @@ function [move_to_make, drone_state] = inference(predicates, drone)
         end
         if (strcmp(predicate.nazwa, 'MB') == true && predicate.wartosc == true)
             %%Ruch do tylu
-            move_to_make.y = 1; %binarna informacja ( w ktora strone sie ruszyc) 
+            move_to_make.y = -1; %binarna informacja ( w ktora strone sie ruszyc) 
         end
         if (strcmp(predicate.nazwa, 'MR') == true && predicate.wartosc == true)
             %%Ruch w prawo
@@ -204,6 +207,10 @@ function [move_to_make, drone_state] = inference(predicates, drone)
         if (strcmp(predicate.nazwa, 'MD') == true && predicate.wartosc == true)
             %%Ruch w dol
             move_to_make.z = -1;
+        end
+        if (strcmp(predicate.nazwa, 'MU') == true && predicate.wartosc == true)
+            %%Ruch w dol
+            move_to_make.z = 1;
         end
     end
     
