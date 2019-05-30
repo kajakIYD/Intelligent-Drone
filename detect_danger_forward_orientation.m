@@ -66,26 +66,26 @@ function [predicates] = detect_danger_forward_orientation(drone, environment, op
     nRL.wartosc = ~RL.wartosc;
     nRL.jest_ustawiony = true;
     
-%     RU = struct;
-%     RU.nazwa = 'RU' %'radar_wykryty_na_gorze';
-%     RU.wartosc = false;
-%     % ruch w gore nie ma sensu (mamy ustalona wartosc Hmin i jesli jestesmy
-%     % ponizej niej to mozemy wykonac zrzut)
-%     for i = 1:drone.sensors_range
-%         if (drone.position.z + i <= H)
-%             if (environment(drone.position.x , drone.position.y, drone.position.z + i) == 'r')
-%                RU.wartosc = true;
-%                break;
-%             end
-%         end
-%     end
-%     RU.jest_ustawiony = true;
-%     
-%     
-%     nRU = struct;
-%     nRU.nazwa = 'nRU'; %'radar_nie_wykryty_na_gorze';
-%     nRU.wartosc = ~RU.wartosc;
-%     nRU.jest_ustawiony = true;
+    RU = struct;
+    RU.nazwa = 'RU' %'radar_wykryty_na_gorze';
+    RU.wartosc = false;
+    % ruch w gore nie ma sensu (mamy ustalona wartosc Hmin i jesli jestesmy
+    % ponizej niej to mozemy wykonac zrzut)
+    for i = 1:drone.sensors_range
+        if (drone.position.z + i <= H)
+            if (environment(drone.position.x , drone.position.y, drone.position.z + i) == 'r')
+               RU.wartosc = true;
+               break;
+            end
+        end
+    end
+    RU.jest_ustawiony = true;
+    
+    
+    nRU = struct;
+    nRU.nazwa = 'nRU'; %'radar_nie_wykryty_na_gorze';
+    nRU.wartosc = ~RU.wartosc;
+    nRU.jest_ustawiony = true;
     
     RD = struct;
     RD.nazwa = 'RD'; %'radar_wykryty_na_dole';
@@ -174,25 +174,24 @@ function [predicates] = detect_danger_forward_orientation(drone, environment, op
     nGL.wartosc = ~GL.wartosc;
     nGL.jest_ustawiony = true;
     
-%     %%Ruch w gore nie ma sensu (poki co)
-%     GU = struct;
-%     GU.nazwa = 'GU' %'radar_wykryty_na_gorze';
-%     GU.wartosc = false;
-%     for i = 1:drone.sensors_range
-%         if (drone.position.z + i <= H)
-%             if (environment(drone.position.x , drone.position.y, drone.position.z + i) == 'g')
-%                GU.wartosc = true;
-%                break;
-%             end
-%         end
-%     end
-%     GU.jest_ustawiony = true;
-%     
-%     
-%     nGU = struct;
-%     nGU.nazwa = 'nRU'; %'radar_nie_wykryty_na_gorze';
-%     nGU.wartosc = ~GU.wartosc;
-%     nGU.jest_ustawiony = true;
+    GU = struct;
+    GU.nazwa = 'GU' %'radar_wykryty_na_gorze';
+    GU.wartosc = false;
+    for i = 1:drone.sensors_range
+        if (drone.position.z + i <= H)
+            if (environment(drone.position.x , drone.position.y, drone.position.z + i) == 'g')
+               GU.wartosc = true;
+               break;
+            end
+        end
+    end
+    GU.jest_ustawiony = true;
+    
+    
+    nGU = struct;
+    nGU.nazwa = 'nRU'; %'radar_nie_wykryty_na_gorze';
+    nGU.wartosc = ~GU.wartosc;
+    nGU.jest_ustawiony = true;
     
     GD = struct;
     GD.nazwa = 'GD'; %'radar_wykryty_na_dole';
@@ -221,8 +220,11 @@ function [predicates] = detect_danger_forward_orientation(drone, environment, op
     predicates.nRR = nRR;
     predicates.RL = RL;
     predicates.nRL = nRL;
+    predicates.RU = RU;
+    predicates.nRU = nRU;
     predicates.RD = RD;
     predicates.nRD = nRD;
+    
     %%
     %%, RR, nRR, RL, nRL, RU, nRU, RD, nRD, GS, nGS, GR, nGR, GL, nGL, GU, nGU, GD, nGD];
 end
