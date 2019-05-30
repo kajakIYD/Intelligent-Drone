@@ -8,7 +8,7 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
     RS.wartosc = false;
     if (optimal_path.y < 0) %pojscie do tylu to teraz dla czujnikow na wprost
         for i = 1:drone.sensors_range
-            if (drone.position.y - i <= N)
+            if (drone.position.y - i >= 1)
                 if (environment(drone.position.x , drone.position.y - i, drone.position.z) == 'r')
                    RS.wartosc = true;
                    break;
@@ -27,13 +27,15 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
     RR = struct;
     RR.nazwa = 'RR'; %'radar_wykryty_na_prawo';
     RR.wartosc = false;
+    if (optimal_path.x > 0)
     for i = 1:drone.sensors_range
-        if (drone.position.x - i >= 1)
+        if (drone.position.x + i <= N)
             if (environment(drone.position.x - i, drone.position.y, drone.position.z) == 'r')
                RR.wartosc = true;
                break;
             end
         end
+    end
     end
     RR.jest_ustawiony = true;
     
@@ -46,6 +48,7 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
     RL = struct;
     RL.nazwa = 'RL'; %'radar_wykryty_na_lewo';
     RL.wartosc = false;
+    if (optimal_path.x < 0) 
     for i = 1:drone.sensors_range
         if (drone.position.x + i <= N)
             if (environment(drone.position.x + i, drone.position.y, drone.position.z) == 'r')
@@ -53,6 +56,7 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
                break;
             end
         end
+    end
     end
     RL.jest_ustawiony = true;
     
@@ -63,8 +67,9 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
     nRL.jest_ustawiony = true;
     
     RU = struct;
-    RU.nazwa = 'RU' %'radar_wykryty_na_gorze';
+    RU.nazwa = 'RU'; %'radar_wykryty_na_gorze';
     RU.wartosc = false;
+    if (optimal_path.z > 0)
     for i = 1:drone.sensors_range
         if (drone.position.z + i <= H)
             if (environment(drone.position.x , drone.position.y, drone.position.z + i) == 'r')
@@ -72,6 +77,7 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
                break;
             end
         end
+    end
     end
     RU.jest_ustawiony = true;
     
@@ -84,6 +90,7 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
     RD = struct;
     RD.nazwa = 'RD'; %'radar_wykryty_na_dole';
     RD.wartosc = false;
+    if (optimal_path.z < 0)
     for i = 1:drone.sensors_range
         if (drone.position.z - i >= 1)
             if (environment(drone.position.x , drone.position.y, drone.position.z - i) == 'r')
@@ -91,6 +98,7 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
                break;
             end
         end
+    end
     end
     RD.jest_ustawiony = true;
     
@@ -161,7 +169,7 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
     nGL.jest_ustawiony = true;
     
     GU = struct;
-    GU.nazwa = 'GU' %'radar_wykryty_na_gorze';
+    GU.nazwa = 'GU'; %'radar_wykryty_na_gorze';
     GU.wartosc = false;
     for i = 1:drone.sensors_range
         if (drone.position.z + i <= H)
@@ -200,6 +208,15 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
     
     predicates.RS = RS;
     predicates.nRS = nRS;
+    predicates.RR = RR;
+    predicates.nRR = nRR;
+    predicates.RL = RL;
+    predicates.nRL = nRL;
+    predicates.RU = RU;
+    predicates.nRU = nRU;
+    predicates.RD = RD;
+    predicates.nRD = nRD;
+    
     %%
     %%, RR, nRR, RL, nRL, RU, nRU, RD, nRD, GS, nGS, GR, nGR, GL, nGL, GU, nGU, GD, nGD];
 end
