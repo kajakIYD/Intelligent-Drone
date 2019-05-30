@@ -16,8 +16,8 @@ N = 10 %szerokoœæ, g³êbokoœæ
 %Pozycja pocz¹tkowa jako struktura (x,y,z)
 
 initial_position = struct
-initial_position.x = 3;
-initial_position.y = 5;
+initial_position.x = 1;
+initial_position.y = 3;
 initial_position.z = 7;
 
 drone.position = initial_position %inicjalizacja wartoœci¹ pocz¹tkow¹ pozycji drona
