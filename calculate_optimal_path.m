@@ -22,6 +22,11 @@ function [optimal_path, predicates] = calculate_optimal_path(drone, predicates)
         MF_p.wartosc = false;
         MF_p.jest_ustawiony = true;
 
+        MB_p = struct;
+        MB_p.nazwa = 'MB_p'; %'ruch_w_przod priorytet';
+        MB_p.wartosc = false;
+        MB_p.jest_ustawiony = true;
+
         MR_p = struct;
         MR_p.nazwa = 'MR_p'; %'ruch_w_dol priorytet';
         MR_p.wartosc = false;
@@ -37,10 +42,17 @@ function [optimal_path, predicates] = calculate_optimal_path(drone, predicates)
         MD_p.wartosc = false;
         MD_p.jest_ustawiony = true;
 
+        MU_p = struct;
+        MU_p.nazwa = 'MU_p'; %'ruch_w_dol priorytet';
+        MU_p.wartosc = false;
+        MU_p.jest_ustawiony = true;
+        
         predicates.MF_p = MF_p;
+        predicates.MB_p = MB_p;
         predicates.MR_p = MR_p;
         predicates.ML_p = ML_p;
         predicates.MD_p = MD_p;
+        predicates.MU_p = MU_p;
 
         if (y_movement > 0)
             predicates.MF_p.wartosc = true;
@@ -56,6 +68,10 @@ function [optimal_path, predicates] = calculate_optimal_path(drone, predicates)
         end
         if (y_movement == 0 && x_movement == 0 && z_movement < 0)
             predicates.MD_p.wartosc = true;
+            return;
+        end
+        if (y_movement == 0 && x_movement == 0 && z_movement > 0)
+            predicates.MU_p.wartosc = true;
             return;
         end
     else
@@ -95,17 +111,19 @@ function [optimal_path, predicates] = calculate_optimal_path(drone, predicates)
         MD_p.nazwa = 'MD_p'; %'ruch_w_dol priorytet';
         MD_p.wartosc = false;
         MD_p.jest_ustawiony = true;
+        
+        MU_p = struct;
+        MU_p.nazwa = 'MU_p'; %'ruch_w_dol priorytet';
+        MU_p.wartosc = false;
+        MU_p.jest_ustawiony = true;
 
         predicates.MF_p = MF_p;
         predicates.MB_p = MB_p;
         predicates.MR_p = MR_p;
         predicates.ML_p = ML_p;
         predicates.MD_p = MD_p;
+        predicates.MU_p = MU_p;
 
-        if (y_movement > 0)
-            predicates.MF_p.wartosc = true;
-            return
-        end
         if (y_movement < 0)
             predicates.MB_p.wartosc = true;
             return
@@ -120,6 +138,10 @@ function [optimal_path, predicates] = calculate_optimal_path(drone, predicates)
         end
         if (y_movement == 0 && x_movement == 0 && z_movement < 0)
             predicates.MD_p.wartosc = true;
+            return;
+        end
+        if (y_movement == 0 && x_movement == 0 && z_movement > 0)
+            predicates.MU_p.wartosc = true;
             return;
         end
     end
