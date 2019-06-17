@@ -126,12 +126,12 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
     
     
     nGS = struct;
-    nGS.nazwa = 'nGS'; %'radar_nie_wykryty_na_wprost';
+    nGS.nazwa = 'nGS'; %'gun_nie_wykryty_na_wprost';
     nGS.wartosc = ~GS.wartosc;
     nGS.jest_ustawiony = true;
     
     GR = struct;
-    GR.nazwa = 'GR'; %'radar_wykryty_na_prawo';
+    GR.nazwa = 'GR'; %'gun_wykryty_na_prawo';
     GR.wartosc = false;
     for i = 1:drone.sensors_range
         if (drone.position.x - i >= 1)
@@ -145,12 +145,12 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
     
     
     nGR = struct;
-    nGR.nazwa = 'nGR'; %'radar_nie_wykryty_na_prawo';
+    nGR.nazwa = 'nGR'; %'gun_nie_wykryty_na_prawo';
     nGR.wartosc = ~GR.wartosc;
     nGR.jest_ustawiony = true;
     
     GL = struct;
-    GL.nazwa = 'RL'; %'radar_wykryty_na_lewo';
+    GL.nazwa = 'RL'; %'gun_wykryty_na_lewo';
     GL.wartosc = false;
     for i = 1:drone.sensors_range
         if (drone.position.x + i <= N)
