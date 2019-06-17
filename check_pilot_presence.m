@@ -11,6 +11,10 @@ function [predicates, drone] = check_pilot_presence(drone, pilot_position, predi
        POP.wartosc = true;
     end
     
+    if (drone.pilot_position_achieved)
+        POP.wartosc = true;
+    end
+    
     nPOP = struct %%Position Over Pilot
     nPOP.nazwa = 'nPOP'; 
     nPOP.wartosc = ~POP.wartosc;

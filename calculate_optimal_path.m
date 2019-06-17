@@ -43,7 +43,7 @@ function [optimal_path, predicates] = calculate_optimal_path(drone, predicates)
         MD_p.jest_ustawiony = true;
 
         MU_p = struct;
-        MU_p.nazwa = 'MU_p'; %'ruch_w_dol priorytet';
+        MU_p.nazwa = 'MU_p'; %'ruch_w_gore priorytet';
         MU_p.wartosc = false;
         MU_p.jest_ustawiony = true;
         
