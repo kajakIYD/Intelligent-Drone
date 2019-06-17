@@ -6,7 +6,7 @@
 %dzia≥aniem radaru bπdü broni
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%gi
 
-function [move_to_make, drone_state] = inference(predicates, drone)
+function [move_to_make] = inference(predicates, drone)
     baza_wiedzy = struct; %baza wiedzy bedzie struktura
     baza_wiedzy.reguly = struct; %reguly w bazach wiedzy takze beda struktura
     baza_wiedzy.fakty_dopytywalne = struct; %rozdzielenie faktow w bazie wiedzy na dopytywalne i niedopytywalne
@@ -86,6 +86,44 @@ function [move_to_make, drone_state] = inference(predicates, drone)
     baza_wiedzy.reguly(7).konkluzja = MU;
     baza_wiedzy.reguly(8).przeslanki = [predicates.nRD, predicates.MD_p];
     baza_wiedzy.reguly(8).konkluzja = MD;
+    
+    i = 8;
+    
+    if (predicates.RS.wartosc && predicates.MB_p.wartosc && predicates.POP.wartosc)
+        predicates.MB_p.wartosc = false;
+        predicates.MR_p.wartosc = true;
+        baza_wiedzy.reguly(i).przeslanki = [predicates.nRL, predicates.MR_p];
+        baza_wiedzy.reguly(i).konkluzja = MR;
+        i = i + 1;
+    end
+    
+    if (predicates.RL.wartosc && predicates.MR_p.wartosc && predicates.POP.wartosc)
+        predicates.MR_p.wartosc = false;
+        predicates.ML_p.wartosc = true;
+        baza_wiedzy.reguly(i).przeslanki = [predicates.nRR, predicates.ML_p];
+        baza_wiedzy.reguly(i).konkluzja = ML;
+        i = i + 1;
+    end
+    
+    if (predicates.RS.wartosc && predicates.MF_p.wartosc)
+        baza_wiedzy.reguly(i).przeslanki = [predicates.RS, predicates.MF_p];
+        baza_wiedzy.reguly(i).konkluzja = MR;
+        i = i + 1;
+    end
+    
+    if (predicates.RR.wartosc && predicates.MR_p.wartosc)
+        baza_wiedzy.reguly(i).przeslanki = [predicates.RR, predicates.MR_p];
+        baza_wiedzy.reguly(i).konkluzja = ML;
+        i = i + 1;
+    end
+    
+    if (predicates.RL.wartosc && predicates.ML_p.wartosc)
+        baza_wiedzy.reguly(i).przeslanki = [predicates.RL, predicates.ML_p];
+        baza_wiedzy.reguly(i).konkluzja = MD;
+        i = i + 1;
+    end
+    
+    
     
     
     
@@ -211,22 +249,6 @@ function [move_to_make, drone_state] = inference(predicates, drone)
         if (strcmp(predicate.nazwa, 'MU') == true && predicate.wartosc == true)
             %%Ruch w dol
             move_to_make.z = 1;
-        end
-    end
-    
-    
-    drone_state_predicates = [baza_wiedzy.reguly(4).przeslanki]; 
-    drone_state = struct;
-    drone_state.radar_detected = false;
-    drone_state.gun_detected = false;
-    for predicate = drone_state_predicates
-        if (strcmp(predicate.nazwa, 'RD') == true && predicate.wartosc == true)
-            %%Radar wykryty
-            drone_state.radar_detected = true; %informacja o tym ze radar wykryty
-        end
-        if (strcmp(predicate.nazwa, 'GD') == true && predicate.wartosc == true)
-            %%Gun wykryty
-            drone_state.gun_detected = true;
         end
     end
     
