@@ -3,6 +3,7 @@
 %bêd¹ poszczególne funkcje programu
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+close all
 
 drone = struct %deklaracja struktury (dron bêdzie stuktur¹ przechowuj¹c¹ informacjê 
 % o jego po³o¿eniu, wysokoœci, prêdkoœci, energii, zasiêgu czujnika)
@@ -23,7 +24,7 @@ initial_position.z = 7;
 drone.position = initial_position %inicjalizacja wartoœci¹ pocz¹tkow¹ pozycji drona
 drone.initial_position = initial_position;
 
-initial_speed = 2; % inicjalizacja wartoœci¹ pocz¹tkow¹ prêdkoœci
+initial_speed = 1; % inicjalizacja wartoœci¹ pocz¹tkow¹ prêdkoœci
 
 initial_energy=5; % inicjalizacja wartoœci¹ pocz¹tkow¹ energii
 
@@ -31,7 +32,7 @@ drone.speed = initial_speed; %przypisanie do prêdkoœci drona wartoœci zainicjali
 
 drone.energy = initial_energy; %przypisanie do energii drona wartoœci zainicjalizowanej
 
-drone.sensors_range = 3; %zasiêg czujnika (na ile komórek dron widzi w przód)
+drone.sensors_range = 1; %zasiêg czujnika (na ile komórek dron widzi w przód)
 
 %pozycja pilota bêd¹ca struktur¹ (przechowuj¹c¹ wspó³rzêdne)
 
@@ -62,6 +63,9 @@ predicates = struct %predykaty bêd¹ strukturami z przyjêtymi parametrami zdanie 
 moves_and_states = struct; %ruchy i stan bêdzie to struktura przechowuj¹ca ruch, jaki zrobi³ dron oraz jego aktualny stan
 simulation_time = 1; %czas symulacji -- parametr inkrementowany po ka¿dym ruchu, aby móc obrazowaæ póŸniej przejœcie krok po kroku drona)
 
+freezeTime = 3;
+able_to_move = true;
+
 predicates = struct;
 
 while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia drona jest >0 i nie powróci³ do pozycji pocz¹tkowej
@@ -76,12 +80,13 @@ while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia 
     [predicates, drone] = check_pilot_presence(drone, pilot_position, predicates);
     [optimal_path, predicates] = calculate_optimal_path(drone, predicates);
     
+    drone = check_sensors_range(drone);
     predicates = detect_danger(drone, environment, optimal_path, predicates); %wykryj zagro¿enie aktualizujemy wartosci predykatow za pomoc¹ parametru pozycji drona oraz drogi do przejœcia
 
     %pocz¹tek tworzenia bazy wiedzy (odpowiada to funkcji TELL - baza
     %wiedzy bêdzie siê zmieniaæ w ka¿dym kroku symulacji
     
-    [move_to_make, drone_state] = inference(predicates, drone); 
+    [move_to_make] = inference(predicates, drone); 
     % funkcja odpowiedzialna za pobranie aktualnych predykatów oraz
     % parametrów drona (przypisuje do zmiennych ruch do zrobienia i
     % aktualny po³o¿enie drona)
@@ -92,7 +97,32 @@ while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia 
     % inference caly algorytm poruszania sie
     %musimy miec informacje gdzie jestesmy i dokad zmierzamy
     
-    drone = move_drone(drone, move_to_make); %funkcja odpowiedzialna za poruszanie dronem
+    [drone_state] = check_drone_state(drone,environment);
+    
+    if (freezeTime == 0)
+        able_to_move = true;
+        freezeTime = 3;
+    else
+        if (drone_state.radar_contact == true)
+            if (freezeTime == 0) %to znaczy ze w poprzedniej iteracji sie ruszylismy
+                freezeTime = 3;
+            end
+            freezeTime = freezeTime - 1;
+            able_to_move = false;
+        else
+            freezeTime = 3;
+            able_to_move = true;
+        end
+    end
+    
+    if (able_to_move == true)
+        drone = move_drone(drone, move_to_make); %funkcja odpowiedzialna za poruszanie dronem
+    else
+        move_to_make.x = 0;
+        move_to_make.y = 0;
+        move_to_make.z = 0;
+        drone = move_drone(drone, move_to_make); 
+    end
     %przyjmuje informacje o dronie oraz ruchu do przejœcia (aktualizacja
     %parametrów drona)
     
@@ -100,6 +130,7 @@ while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia 
     %ile jej uby³o po wykonaniu ruchu
     
     moves_and_states.moves(simulation_time) = move_to_make;
+    moves_and_states.speed(simulation_time) = drone.speed;
     %zbieranie wyników dla czasu symulacji w wektorze (ruchy) aby póŸniej
     %móc je wyœwietliæ
     
