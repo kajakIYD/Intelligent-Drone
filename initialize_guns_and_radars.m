@@ -7,7 +7,8 @@ function [environment] = initialize_guns_and_radars(environment)
     environment(9:10, 9:10, 9:10) = 'g';
     environment(8:9, 8:9, 8:9) = 'g';
     
-    environment(1, 4, 7) = 'r'; %obok poz startowej drona
+    environment(1, 4, 7) = 'g'; %obok poz startowej drona
+    
     environment(3, 4, 1) = 'r'; %obok pilota
     environment(4, 5, 1) = 'r'; %obok pilota
     environment(1, 3, 1) = 'r'; %obok pilota
