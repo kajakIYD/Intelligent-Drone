@@ -74,6 +74,9 @@ function [optimal_path, predicates] = calculate_optimal_path(drone, predicates)
             predicates.MU_p.wartosc = true;
             return;
         end
+        if (y_movement < 0)
+            predicates.MB_p.wartosc = true;
+        end
     else
         %1.os y 2.os x 3.os z
 
@@ -142,6 +145,10 @@ function [optimal_path, predicates] = calculate_optimal_path(drone, predicates)
         end
         if (y_movement == 0 && x_movement == 0 && z_movement > 0)
             predicates.MU_p.wartosc = true;
+            return;
+        end
+        if (y_movement > 0)
+            predicates.MF_p.wartosc = true;
             return;
         end
     end
