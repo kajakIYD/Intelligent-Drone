@@ -87,8 +87,18 @@ function [move_to_make] = inference(predicates, drone)
     baza_wiedzy.reguly(8).przeslanki = [predicates.nRD, predicates.MD_p];
     baza_wiedzy.reguly(8).konkluzja = MD;
     
+    %%Jaka jest orientacja sensorów, a jaka jest orientacja ruchwa
+    %Czy s¹ zgodne? Czy i co siê zmienia po osi¹gniêciu pozycji pilota
+    %
+    
     i = 8;
     
+    if (predicates.MB_p.wartosc && predicates.nPOP.wartosc)
+        baza_wiedzy.reguly(i).przeslanki = [predicates.MB_p, predicates.nPOP];
+        baza_wiedzy.reguly(i).konkluzja = MB;
+        i = i + 1;
+    end
+        
     if (predicates.RS.wartosc && predicates.MB_p.wartosc && predicates.POP.wartosc)
         predicates.MB_p.wartosc = false;
         predicates.MR_p.wartosc = true;
