@@ -8,42 +8,7 @@ close all
 drone = struct %deklaracja struktury (dron bêdzie stuktur¹ przechowuj¹c¹ informacjê 
 % o jego po³o¿eniu, wysokoœci, prêdkoœci, energii, zasiêgu czujnika)
 
-%1. Parametryzacja parametrów H,N (wysokoœæ, szerokoœæ , g³êbokoœæ)
-
-H = 10 %wysokoœæ
-
-N = 10 %szerokoœæ, g³êbokoœæ
-
-%Pozycja pocz¹tkowa jako struktura (x,y,z)
-
-initial_position = struct
-initial_position.x = 1;
-initial_position.y = 3;
-initial_position.z = 7;
-
-drone.position = initial_position %inicjalizacja wartoœci¹ pocz¹tkow¹ pozycji drona
-drone.initial_position = initial_position;
-
-initial_speed = 1; % inicjalizacja wartoœci¹ pocz¹tkow¹ prêdkoœci
-
-initial_energy=5; % inicjalizacja wartoœci¹ pocz¹tkow¹ energii
-
-drone.speed = initial_speed; %przypisanie do prêdkoœci drona wartoœci zainicjalizowanej
-
-drone.energy = initial_energy; %przypisanie do energii drona wartoœci zainicjalizowanej
-
-drone.sensors_range = 1; %zasiêg czujnika (na ile komórek dron widzi w przód)
-
-%pozycja pilota bêd¹ca struktur¹ (przechowuj¹c¹ wspó³rzêdne)
-
-pilot_position= struct
-
-pilot_position.x = 3;
-
-pilot_position.y = 5;
-
-pilot_position.z = H/10; %obni¿enie siê do wysokoœci 0.1 H w celu zrzucenia zaopatrzenia
-drone.pilot_position = pilot_position; %przypisanie do pola pilot_position w strukturze dron po³o¿enia pilota
+[drone, N, H] = get_simulation_parameters(drone, 20, 10, 20, 10, 100, 20);
 
 drone.pilot_position_achieved=false; %pozycja pilota osi¹gniêta (pocz¹tkowo ustawione na wartosæ false)
 
@@ -68,6 +33,9 @@ able_to_move = true;
 
 predicates = struct;
 
+message = '';
+
+
 while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia drona jest >0 i nie powróci³ do pozycji pocz¹tkowej
     %%TODO ruch w gore: 
     %%-reguly w bazie wiedzy, pierwszenstwo w funkcji
@@ -79,6 +47,10 @@ while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia 
     %[cube_to_pass, drone_relative_position] = environment( x_start:x_end, y_start:y_end, z_start:z_end); %zapisanie wycinka œrodowiska, który bêdzie nas interesowa³, przy analizie kolejnego jego ruchu
     [predicates, drone] = check_pilot_presence(drone, pilot_position, predicates);
     [optimal_path, predicates] = calculate_optimal_path(drone, predicates);
+    
+    if ( drone.pilot_position_achieved == true)
+        disp('a');
+    end
     
     drone = check_sensors_range(drone);
     predicates = detect_danger(drone, environment, optimal_path, predicates); %wykryj zagro¿enie aktualizujemy wartosci predykatow za pomoc¹ parametru pozycji drona oraz drogi do przejœcia
@@ -98,6 +70,13 @@ while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia 
     %musimy miec informacje gdzie jestesmy i dokad zmierzamy
     
     [drone_state] = check_drone_state(drone,environment);
+    
+    if (drone_state.gun_contact == true)
+        drone.speed = round(drone.speed / 2);
+        if drone.speed == 0
+            drone.speed = 1;
+        end
+    end
     
     if (freezeTime == 0)
         able_to_move = true;
@@ -124,12 +103,14 @@ while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia 
         drone = move_drone(drone, move_to_make); 
     end
     %przyjmuje informacje o dronie oraz ruchu do przejœcia (aktualizacja
-    %parametrów drona)
+    %parametrów drona)    
     
-    %drone = take_drone_energy(drone, move_to_make); %funkcja odpowiedzialna za pobranie energii drona
+    drone = take_drone_energy(drone); %funkcja odpowiedzialna za pobranie energii drona
     %ile jej uby³o po wykonaniu ruchu
     
     moves_and_states.moves(simulation_time) = move_to_make;
+    [message] = append_move_to_message(message, moves_and_states.moves(simulation_time));
+    
     moves_and_states.speed(simulation_time) = drone.speed;
     %zbieranie wyników dla czasu symulacji w wektorze (ruchy) aby póŸniej
     %móc je wyœwietliæ
@@ -143,8 +124,9 @@ while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia 
 end
 plot_simulation(environment, drone, moves_and_states); % prezentacja wyników po zebraniu symulacji
 
-analyze_results(drone, simulation_time); %analiza rezultatów (dron w czasie)
+[message] = analyze_results(drone, moves_and_states, simulation_time, message); %analiza rezultatów (dron w czasie)
 
+disp(message)
 
 %bazuje na tym ¿e mamy bazê wiedzy, mamy regu³y, po kolei przez te regu³y przeskakujemy i patrzymy co sie dzieje
 
