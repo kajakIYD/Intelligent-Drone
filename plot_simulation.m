@@ -14,7 +14,7 @@ figure(1)
 for i = 1:length(x)
 for k = 1:length(z)
    if (environment(i, 1, k) == 'r')
-        plot3(i, 1, k, 'bx')
+        plot3(i, 1, k, 'rx')
    elseif (environment(i, 1, k) == 'g')
         plot3(i, 1, k, 'gx')   
    else
@@ -23,7 +23,7 @@ for k = 1:length(z)
    hold on
    
    if (environment(i, length(y), k) == 'r')
-        plot3(i, length(y), k, 'bx')
+        plot3(i, length(y), k, 'rx')
    elseif (environment(i, length(y), k) == 'g')
         plot3(i, length(y), k, 'gx')   
    else
@@ -36,7 +36,7 @@ end
 for j = 1:length(y)
 for k = 1:length(z)
    if (environment(1, j, k) == 'r')
-        plot3(1, j, k, 'bx')
+        plot3(1, j, k, 'rx')
    elseif (environment(1, j, k) == 'g')
         plot3(1, j, k, 'gx')   
    else
@@ -45,7 +45,7 @@ for k = 1:length(z)
    hold on
    
    if (environment(length(x), j, k) == 'r')
-        plot3(length(x), j, k, 'bx')
+        plot3(length(x), j, k, 'rx')
    elseif (environment(length(x), j, k) == 'g')
         plot3(length(x), j, k, 'gx')   
    else
@@ -58,7 +58,7 @@ end
 for j = 1:length(y)
 for i = 1:length(x)
    if (environment(i, j, 1) == 'r')
-        plot3(i, j, 1, 'bx')
+        plot3(i, j, 1, 'rx')
    elseif (environment(i, j, 1) == 'g')
         plot3(i, j, 1, 'gx')   
    else
@@ -67,7 +67,7 @@ for i = 1:length(x)
    hold on
    
    if (environment(i, j, length(z)) == 'r')
-        plot3(i, j, length(z), 'bx')
+        plot3(i, j, length(z), 'rx')
    elseif (environment(i, j, length(z)) == 'g')
         plot3(i, j, length(z), 'gx')   
    else
