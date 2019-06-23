@@ -30,7 +30,7 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
     if (optimal_path.x > 0)
     for i = 1:drone.sensors_range
         if (drone.position.x + i <= N)
-            if (environment(drone.position.x - i, drone.position.y, drone.position.z) == 'r')
+            if (environment(drone.position.x + i, drone.position.y, drone.position.z) == 'r')
                RR.wartosc = true;
                break;
             end
@@ -50,8 +50,8 @@ function [predicates] = detect_danger_backward_orientation(drone, environment, o
     RL.wartosc = false;
     if (optimal_path.x < 0) 
     for i = 1:drone.sensors_range
-        if (drone.position.x + i <= N)
-            if (environment(drone.position.x + i, drone.position.y, drone.position.z) == 'r')
+        if (drone.position.x - i >= 1)
+            if (environment(drone.position.x - i, drone.position.y, drone.position.z) == 'r')
                RL.wartosc = true;
                break;
             end
