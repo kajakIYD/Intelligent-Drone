@@ -13,22 +13,7 @@ function [move_to_make] = inference(predicates, drone)
     baza_wiedzy.fakty_niedopytywalne = struct;
 
     %predykat.jest_ustawiony = true -> fakt niedopytywalny
-    
-    A = struct; %predykat
-    A.nazwa = 'A'; %'Znajduje sie nad pilotem';
-    A.wartosc = true;
-    A.jest_ustawiony = true;
-    B = struct;
-    B.nazwa = 'B'; %'Jest ponizej wysokosci minimalnej';
-    B.wartosc = false;
-    B.jest_ustawiony = true;
-    C = struct;
-    C.nazwa = 'C'; %'Spusc ladunek';
-    C.wartosc = false;
-    C.jest_ustawiony = false;
-    
-    
-    
+
     MF = struct;
     MF.nazwa = 'MF'; %'ruch_w_przod';
     MF.wartosc = false;
@@ -93,12 +78,19 @@ function [move_to_make] = inference(predicates, drone)
     
     i = 8;
     
-    if (predicates.MB_p.wartosc && predicates.nPOP.wartosc)
-        baza_wiedzy.reguly(i).przeslanki = [predicates.MB_p, predicates.nPOP];
-        baza_wiedzy.reguly(i).konkluzja = MB;
-        i = i + 1;
+    if ((predicates.MB_p.wartosc && drone.pilot_position_achieved && predicates.nRS.wartosc)==true)
+        move_to_make.x = 0;
+        move_to_make.y = -1;
+        move_to_make.z = 0;
+        return;
+%         baza_wiedzy.reguly(i).przeslanki = [predicates.MB_p, predicates.nPOP];
+%         baza_wiedzy.reguly(i).konkluzja = MB;
+%         i = i + 1;
     end
         
+    %Orientacja -> backwards, czyli RS znaczy ze radar jest "za dronem"
+    %(mniejsza wspolrzedna y) => zmien priorytet na pojscie w prawo (czyli
+    %zwiekszenie wspolrzednej x niezaleznie od orientacji)
     if (predicates.RS.wartosc && predicates.MB_p.wartosc && predicates.POP.wartosc)
         predicates.MB_p.wartosc = false;
         predicates.MR_p.wartosc = true;
@@ -122,6 +114,8 @@ function [move_to_make] = inference(predicates, drone)
     end
     
     if (predicates.RR.wartosc && predicates.MR_p.wartosc)
+        predicates.MR_p.wartosc = false;
+        predicates.ML_p.wartosc = true;
         baza_wiedzy.reguly(i).przeslanki = [predicates.RR, predicates.MR_p];
         baza_wiedzy.reguly(i).konkluzja = ML;
         i = i + 1;
@@ -133,10 +127,12 @@ function [move_to_make] = inference(predicates, drone)
         i = i + 1;
     end
     
-    
-    
-    
-    
+    if ((predicates.MB_p.wartosc && drone.pilot_position_achieved == false) == true)
+        move_to_make.x = 0;
+        move_to_make.y = -1;
+        move_to_make.z = 0;
+        return
+    end
     %%Orientacja sprawdzania czujnikow zmienia sie po osiagnieciu pilota
     %%Natomiast orientacja ruchowa siê nie zmienia
     
