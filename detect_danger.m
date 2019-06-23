@@ -13,6 +13,11 @@ function [predicates] = detect_danger(drone, environment, optimal_path, predicat
     %%predicates : radar wykryty, gun wykryty
     
     if (drone.pilot_position_achieved == true)
+        %Orientacja -> backwards, czyli radar na prowo -> szukamy po
+        %wiêkszych wspolrzednych "x" niz pozycja drona, radar na lewo ->
+        %szukamy po mniejszych wspolrzednych "x" niz pozycja drona, radar
+        %na wprost -> z racji tego ze orientacja jest "backwards" to
+        %szukamy po wspolrzednych "y" mniejszych niz pozycja drona
         predicates = detect_danger_backward_orientation(drone, environment, optimal_path, predicates);
     else
         predicates = detect_danger_forward_orientation(drone, environment, optimal_path, predicates);
