@@ -1,4 +1,4 @@
-function [drone, N, H] = get_simulation_parameters(drone, N_max, N_min, H_max, H_min, initial_energy_max, initial_energy_min)
+function [drone, N, H, pilot_position] = get_simulation_parameters(drone, N_max, N_min, H_max, H_min, initial_energy_max, initial_energy_min)
 
     %1. Parametryzacja parametrów H,N (wysokoœæ, szerokoœæ , g³êbokoœæ)
 
@@ -9,9 +9,9 @@ function [drone, N, H] = get_simulation_parameters(drone, N_max, N_min, H_max, H
     %Pozycja pocz¹tkowa jako struktura (x,y,z)
 
     initial_position = struct;
-    initial_position.x = round((N - 1) * rand(1)) + 1; % 1;
-    initial_position.y = round((N - 1) * rand(1)) + 1; % 3;
-    initial_position.z = round((H - 1) * rand(1)) + 1; % 7;
+    initial_position.x = round((N - 1) * rand(1)) + 1; %9; 8; 10; 1;
+    initial_position.y = round((N - 1) * rand(1)) + 1; %9; 5; 4; 3;
+    initial_position.z = round((H - 1) * rand(1)) + 1; %4; 5; 6; 7;
 
     drone.position = initial_position; %inicjalizacja wartoœci¹ pocz¹tkow¹ pozycji drona
     drone.initial_position = initial_position;
