@@ -55,27 +55,27 @@ function [optimal_path, predicates] = calculate_optimal_path(drone, predicates)
         predicates.MU_p = MU_p;
 
         if (y_movement > 0)
-            predicates.MF_p.wartosc = true;
+            predicates.MF_p.wartosc = true; %ruch w przod priorytet
             return
         end
         if (y_movement == 0 && x_movement > 0)
-            predicates.MR_p.wartosc = true;
+            predicates.MR_p.wartosc = true; %ruch w prawo priorytet
             return;
         end
         if (y_movement == 0 && x_movement < 0)
-            predicates.ML_p.wartosc = true;
+            predicates.ML_p.wartosc = true; %ruch w lewo priorytet
             return;
         end
         if (y_movement == 0 && x_movement == 0 && z_movement < 0)
-            predicates.MD_p.wartosc = true;
+            predicates.MD_p.wartosc = true; %ruch w dol priorytet
             return;
         end
         if (y_movement == 0 && x_movement == 0 && z_movement > 0)
-            predicates.MU_p.wartosc = true;
+            predicates.MU_p.wartosc = true; %ruch w gore priorytet
             return;
         end
         if (y_movement < 0)
-            predicates.MB_p.wartosc = true;
+            predicates.MB_p.wartosc = true; %ruch w tyl priorytet
         end
     else
         %1.os y 2.os x 3.os z
@@ -86,9 +86,9 @@ function [optimal_path, predicates] = calculate_optimal_path(drone, predicates)
 
         z_movement = drone.initial_position.z - drone_position.z;%ruch gora/dol
 
-        optimal_path.y = y_movement;
-        optimal_path.x = x_movement;
-        optimal_path.z = z_movement;
+        optimal_path.y = y_movement; %przypisanie optymalnej sciezki na osi y
+        optimal_path.x = x_movement; %przypisanie optymalnej sciezki na osi x
+        optimal_path.z = z_movement; %przypisanie optymalnej sciezki na osi z
 
         MF_p = struct;
         MF_p.nazwa = 'MF_p'; %'ruch_w_przod priorytet';

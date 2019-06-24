@@ -8,7 +8,7 @@ function [predicates] = detect_danger_forward_orientation(drone, environment, op
     RS.wartosc = false;
     if (optimal_path.y > 0)
         for i = 1:drone.sensors_range
-            if (drone.position.y + i <= N)
+            if (drone.position.y + i <= N) %zabezpieczenie aby nie wyjsc poza granice srodowiska
                 if (environment(drone.position.x , drone.position.y + i, drone.position.z) == 'r')
                    RS.wartosc = true;
                    break;
@@ -29,7 +29,7 @@ function [predicates] = detect_danger_forward_orientation(drone, environment, op
     RR.wartosc = false;
     if (optimal_path.x > 0)
         for i = 1:drone.sensors_range
-            if (drone.position.x + i <= N)
+            if (drone.position.x + i <= N) %zabezpieczenie aby nie wyjsc poza granice srodowiska
                 if (environment(drone.position.x + i, drone.position.y, drone.position.z) == 'r')
                    RR.wartosc = true;
                    break;
@@ -50,7 +50,7 @@ function [predicates] = detect_danger_forward_orientation(drone, environment, op
     RL.wartosc = false;
     if (optimal_path.x < 0)
         for i = 1:drone.sensors_range
-            if (drone.position.x - i >= 1)
+            if (drone.position.x - i >= 1) %zabezpieczenie aby nie wyjsc poza granice srodowiska
                 if (environment(drone.position.x - i, drone.position.y, drone.position.z) == 'r')
                    RL.wartosc = true;
                    break;
@@ -72,7 +72,7 @@ function [predicates] = detect_danger_forward_orientation(drone, environment, op
     % ruch w gore nie ma sensu (mamy ustalona wartosc Hmin i jesli jestesmy
     % ponizej niej to mozemy wykonac zrzut)
     for i = 1:drone.sensors_range
-        if (drone.position.z + i <= H)
+        if (drone.position.z + i <= H) %zabezpieczenie aby nie wyjsc poza granice srodowiska
             if (environment(drone.position.x , drone.position.y, drone.position.z + i) == 'r')
                RU.wartosc = true;
                break;
@@ -92,7 +92,7 @@ function [predicates] = detect_danger_forward_orientation(drone, environment, op
     RD.wartosc = false;
     if (optimal_path.z < 0)
         for i = 1:drone.sensors_range
-            if (drone.position.z - i >= 1)
+            if (drone.position.z - i >= 1) %zabezpieczenie aby nie wyjsc poza granice srodowiska
                 if (environment(drone.position.x , drone.position.y, drone.position.z - i) == 'r')
                    RD.wartosc = true;
                    break;
@@ -116,7 +116,7 @@ function [predicates] = detect_danger_forward_orientation(drone, environment, op
     GS.wartosc = false;
     if (optimal_path.y > 0)
         for i = 1:drone.sensors_range
-            if (drone.position.y + i <= N)
+            if (drone.position.y + i <= N) %zabezpieczenie aby nie wyjsc poza granice srodowiska
                 if (environment(drone.position.x , drone.position.y + i, drone.position.z) == 'g')
                    GS.wartosc = true;
                    break;
@@ -137,7 +137,7 @@ function [predicates] = detect_danger_forward_orientation(drone, environment, op
     GR.wartosc = false;
     if (optimal_path.x > 0)
         for i = 1:drone.sensors_range
-            if (drone.position.x + i <= N)
+            if (drone.position.x + i <= N) %zabezpieczenie aby nie wyjsc poza granice srodowiska
                 if (environment(drone.position.x + i, drone.position.y, drone.position.z) == 'g')
                    GR.wartosc = true;
                    break;
@@ -158,7 +158,7 @@ function [predicates] = detect_danger_forward_orientation(drone, environment, op
     GL.wartosc = false;
     if (optimal_path.x < 0)
         for i = 1:drone.sensors_range
-            if (drone.position.x - i >= 1)
+            if (drone.position.x - i >= 1) %zabezpieczenie aby nie wyjsc poza granice srodowiska
                 if (environment(drone.position.x - i, drone.position.y, drone.position.z) == 'r')
                    GL.wartosc = true;
                    break;
@@ -178,7 +178,7 @@ function [predicates] = detect_danger_forward_orientation(drone, environment, op
     GU.nazwa = 'GU' %'radar_wykryty_na_gorze';
     GU.wartosc = false;
     for i = 1:drone.sensors_range
-        if (drone.position.z + i <= H)
+        if (drone.position.z + i <= H) %zabezpieczenie aby nie wyjsc poza granice srodowiska
             if (environment(drone.position.x , drone.position.y, drone.position.z + i) == 'g')
                GU.wartosc = true;
                break;
@@ -198,7 +198,7 @@ function [predicates] = detect_danger_forward_orientation(drone, environment, op
     GD.wartosc = false;
     if (optimal_path.z < 0)
         for i = 1:drone.sensors_range
-            if (drone.position.z - i >= 1)
+            if (drone.position.z - i >= 1) %zabezpieczenie aby nie wyjsc poza granice srodowiska
                 if (environment(drone.position.x , drone.position.y, drone.position.z - i) == 'g')
                    GD.wartosc = true;
                    break;

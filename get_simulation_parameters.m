@@ -1,3 +1,8 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Funkcja s³u¿aca do pobrania wartosci do symulacji drona (H,N, polozenie
+%poczatkowe drona i pilota, zasieg czujnikow poczatkowy, predkosc
+%poczatkowa)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [drone, N, H, pilot_position] = get_simulation_parameters(drone, N_max, N_min, H_max, H_min, initial_energy_max, initial_energy_min)
 
     %1. Parametryzacja parametrów H,N (wysokoœæ, szerokoœæ , g³êbokoœæ)

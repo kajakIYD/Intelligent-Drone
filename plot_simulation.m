@@ -101,7 +101,7 @@ hold on
 plot3(drone.pilot_position.x, drone.pilot_position.y, drone.pilot_position.z, 'm*');
 
 %%Legenda dla kazdego rodzaju oznaczenia
-%legend(['Radar';'Gun';'Puste pole'])
+legend([{'Radar'},{'Gun'},{'Puste pole'}])
 
 
 end

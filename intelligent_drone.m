@@ -130,10 +130,10 @@ while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia 
     
     [predicates, drone] = check_finish_conditions(drone, predicates);
     simulation_time = simulation_time + 1; %inkrementacja czasu symulacji po ka¿dym przejœciu pêtli
-end
+end] = analyze_results(drone, m
 plot_simulation(environment, drone, moves_and_states); % prezentacja wyników po zebraniu symulacji
 
-[message] = analyze_results(drone, moves_and_states, simulation_time, message); %analiza rezultatów (dron w czasie)
+[messageoves_and_states, simulation_time, message); %analiza rezultatów (dron w czasie)
 
 disp(message)   
    

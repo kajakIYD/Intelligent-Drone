@@ -76,7 +76,8 @@ function [move_to_make] = inference(predicates, drone)
     %Czy s¹ zgodne? Czy i co siê zmienia po osi¹gniêciu pozycji pilota
     %
     
-    i = 8;
+    % i = 8;
+    i = length(baza_wiedzy.reguly);
     
     if ((predicates.MB_p.wartosc && drone.pilot_position_achieved && predicates.nRS.wartosc)==true)
         move_to_make.x = 0;
