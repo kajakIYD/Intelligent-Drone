@@ -3,14 +3,21 @@
 %poczatkowe drona i pilota, zasieg czujnikow poczatkowy, predkosc
 %poczatkowa)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [drone, N, H, pilot_position] = get_simulation_parameters(drone, N_max, N_min, H_max, H_min, initial_energy_max, initial_energy_min)
+function [drone, N, H, pilot_position] = get_simulation_parameters(drone, N_max, N_min, H_max, H_min, initial_energy_max, initial_energy_min, randomMode)
 
+
+if (randomMode == true)
     %1. Parametryzacja parametrów H,N (wysokoœæ, szerokoœæ , g³êbokoœæ)
 
     H = round((H_max  - H_min) * rand(1)) + H_min; %wysokoœæ
 
     N = round((N_max - N_min) * rand(1)) + N_min;  %szerokoœæ, g³êbokoœæ
-
+else
+    %%Parametry ustawiane na sztywno
+    N = N_max;
+    H = H_max;
+end
+    
     %Pozycja pocz¹tkowa jako struktura (x,y,z)
 
     initial_position = struct;
@@ -49,8 +56,10 @@ function [drone, N, H, pilot_position] = get_simulation_parameters(drone, N_max,
 %     drone.position.z = 5;
     
     pilot_position.z = round(H/10); %obni¿enie siê do wysokoœci 0.1 H w celu zrzucenia zaopatrzenia
+    if (pilot_position.z == 0)
+        pilot_position.z = 1;
+    end
+    
     drone.pilot_position = pilot_position; %przypisanie do pola pilot_position w strukturze dron po³o¿enia pilota
 
-    
-    
 end

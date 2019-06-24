@@ -10,24 +10,25 @@ y = 1 : length(environment(1, :,1));
 z = environment(1, 1,:);
 z = 1 : length(z(:));
 
-figure(1)
+h = zeros(5,1);
+
 for i = 1:length(x)
 for k = 1:length(z)
    if (environment(i, 1, k) == 'r')
-        plot3(i, 1, k, 'rx')
+       h(2) =  plot3(i, 1, k, 'rx');
    elseif (environment(i, 1, k) == 'g')
-        plot3(i, 1, k, 'gx')   
+       h(3) = plot3(i, 1, k, 'gx');  
    else
-        plot3(i, 1, k, 'b.')   
+       h(1) = plot3(i, 1, k, 'b.')   
    end
    hold on
    
    if (environment(i, length(y), k) == 'r')
-        plot3(i, length(y), k, 'rx')
+      h(2) = plot3(i, length(y), k, 'rx')
    elseif (environment(i, length(y), k) == 'g')
-        plot3(i, length(y), k, 'gx')   
+      h(3) = plot3(i, length(y), k, 'gx')   
    else
-        plot3(i, length(y), k, 'b.')   
+      h(1) = plot3(i, length(y), k, 'b.')   
    end
    hold on
 end
@@ -36,20 +37,20 @@ end
 for j = 1:length(y)
 for k = 1:length(z)
    if (environment(1, j, k) == 'r')
-        plot3(1, j, k, 'rx')
+        h(2) = plot3(1, j, k, 'rx')
    elseif (environment(1, j, k) == 'g')
-        plot3(1, j, k, 'gx')   
+        h(3) = plot3(1, j, k, 'gx')   
    else
-        plot3(1, j, k, 'b.')
+       h(1) = plot3(1, j, k, 'b.')
    end   
    hold on
    
    if (environment(length(x), j, k) == 'r')
-        plot3(length(x), j, k, 'rx')
+        h(2) = plot3(length(x), j, k, 'rx')
    elseif (environment(length(x), j, k) == 'g')
-        plot3(length(x), j, k, 'gx')   
+        h(3) = plot3(length(x), j, k, 'gx')   
    else
-        plot3(length(x), j, k, 'b.')
+        h(1) = plot3(length(x), j, k, 'b.')
    end
    hold on
 end
@@ -58,20 +59,20 @@ end
 for j = 1:length(y)
 for i = 1:length(x)
    if (environment(i, j, 1) == 'r')
-        plot3(i, j, 1, 'rx')
+        h(2) = plot3(i, j, 1, 'rx')
    elseif (environment(i, j, 1) == 'g')
-        plot3(i, j, 1, 'gx')   
+        h(3) = plot3(i, j, 1, 'gx')   
    else
-        plot3(i, j, 1, 'b.')
+        h(1) = plot3(i, j, 1, 'b.')
    end
    hold on
    
    if (environment(i, j, length(z)) == 'r')
-        plot3(i, j, length(z), 'rx')
+        h(2) = plot3(i, j, length(z), 'rx')
    elseif (environment(i, j, length(z)) == 'g')
-        plot3(i, j, length(z), 'gx')   
+        h(3) = plot3(i, j, length(z), 'gx')   
    else
-        plot3(i, j, length(z), 'b.')
+        h(1) = plot3(i, j, length(z), 'b.')
    end
    
    hold on
@@ -96,12 +97,17 @@ for i = 1:length(moves_and_states.moves)
     drone_position_i.z = z_path(2);
 end
 
-plot3(drone.initial_position.x, drone.initial_position.y, drone.initial_position.z, 'm*');
+h(4) = plot3(drone.initial_position.x, drone.initial_position.y, drone.initial_position.z, 'm*');
 hold on
-plot3(drone.pilot_position.x, drone.pilot_position.y, drone.pilot_position.z, 'm*');
+h(5) = plot3(drone.pilot_position.x, drone.pilot_position.y, drone.pilot_position.z, 'y*');
 
 %%Legenda dla kazdego rodzaju oznaczenia
-legend([{'Radar'},{'Gun'},{'Puste pole'}])
+% h(1) - puste pole
+% h(2) - czerwone, radar
+% h(3) - zielone, gun
+% h(4) - magenta, dron i pilot
+
+legend(h, 'Puste pole', 'Radar', 'Gun', 'Drone - start', 'Pilot');
 
 
 end
