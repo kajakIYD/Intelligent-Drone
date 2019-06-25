@@ -1,6 +1,12 @@
-function [message] = analyze_results(drone, moves_and_states, simulation_time, message)
-%analiza rezultatów (dron w czasie)
-    
+function [message] = analyze_results(drone, moves_and_states, simulation_time, message, randomMode, N, H)
+%analiza rezultatów (dron w czasie),
+       
+    if (randomMode == true)
+        message = [message 'Random Mode ON' newline ' N=' num2str(N) ' H=' num2str(H) newline];
+    else
+        message = [message 'Random Mode OFF' newline];
+    end
+
     if (drone.if_return_to_start == true)
         message  = [message 'Misja zakoñczona powodzeniem' newline];
     else

@@ -9,12 +9,12 @@ function [predicates, drone] = check_pilot_presence(drone, pilot_position, predi
     POP.jest_ustawiony = true;
     
     
-    if (drone.position.x == pilot_position.x && drone.position.y == pilot_position.y && drone.position.z <= pilot_position.z)
+    if ((drone.position.x == pilot_position.x && drone.position.y == pilot_position.y && drone.position.z <= pilot_position.z)==true)
        drone.pilot_position_achieved = true;
        POP.wartosc = true;
     end
     
-    if (drone.pilot_position_achieved)
+    if (drone.pilot_position_achieved == true)
         POP.wartosc = true;
     end
     

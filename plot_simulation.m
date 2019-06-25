@@ -11,6 +11,8 @@ z = environment(1, 1,:);
 z = 1 : length(z(:));
 
 h = zeros(5,1);
+%%%Scenariusz 2
+%h = zeros(3,1);
 
 for i = 1:length(x)
 for k = 1:length(z)
@@ -37,9 +39,9 @@ end
 for j = 1:length(y)
 for k = 1:length(z)
    if (environment(1, j, k) == 'r')
-        h(2) = plot3(1, j, k, 'rx');
+       h(2) = plot3(1, j, k, 'rx');
    elseif (environment(1, j, k) == 'g')
-        h(3) = plot3(1, j, k, 'gx');   
+       h(3) = plot3(1, j, k, 'gx');   
    else
        h(1) = plot3(1, j, k, 'b.');
    end   
@@ -96,9 +98,11 @@ for i = 1:length(moves_and_states.moves)
     drone_position_i.y = y_path(2);
     drone_position_i.z = z_path(2);
 end
-
+%%Scenariusz 2
+%h(2) = plot3(drone.initial_position.x, drone.initial_position.y, drone.initial_position.z, 'm*');
 h(4) = plot3(drone.initial_position.x, drone.initial_position.y, drone.initial_position.z, 'm*');
 hold on
+%h(3) = plot3(drone.pilot_position.x, drone.pilot_position.y, drone.pilot_position.z, 'c*');
 h(5) = plot3(drone.pilot_position.x, drone.pilot_position.y, drone.pilot_position.z, 'c*');
 
 %%Legenda dla kazdego rodzaju oznaczenia
@@ -107,7 +111,10 @@ h(5) = plot3(drone.pilot_position.x, drone.pilot_position.y, drone.pilot_positio
 % h(3) - zielone, gun
 % h(4) - magenta, dron i pilot
 
-legend(h, 'Puste pole', 'Radar', 'Gun', 'Drone - start', 'Pilot');
+%legend(h, 'Puste pole', 'Radar', 'Gun', 'Drone - start', 'Pilot');
+
+%%%% Scenariusz 2
+%legend(h, 'Puste pole', 'Drone - start', 'Pilot');
 
 
 end

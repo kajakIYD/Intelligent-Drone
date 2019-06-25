@@ -21,9 +21,9 @@ end
     %Pozycja pocz¹tkowa jako struktura (x,y,z)
 
     initial_position = struct;
-    initial_position.x = 1; %round((N - 1) * rand(1)) + 1; %9; 8; 10; 1;
-    initial_position.y = 3; %round((N - 1) * rand(1)) + 1; %9; 5; 4; 3;
-    initial_position.z = 7; %round((H - 1) * rand(1)) + 1; %4; 5; 6; 7;
+    initial_position.x = 9;%round((N - 1) * rand(1)) + 1; %9; 8; 10; 1;
+    initial_position.y = 9;%round((N - 1) * rand(1)) + 1; %9; 5; 4; 3;
+    initial_position.z = 9;%round((H - 1) * rand(1)) + 1; %4; 5; 6; 7;
 
     drone.position = initial_position; %inicjalizacja wartoœci¹ pocz¹tkow¹ pozycji drona
     drone.initial_position = initial_position;
@@ -42,10 +42,12 @@ end
     %pozycja pilota bêd¹ca struktur¹ (przechowuj¹c¹ wspó³rzêdne)
 
     pilot_position= struct;
+    
+ %%%%%%Scenariusz testowy 1,2 
 
-    pilot_position.x = 3;
+    pilot_position.x = 7;
 
-    pilot_position.y = 5;
+    pilot_position.y = 7;
 
 % For debugging only
 %     N = 11;
@@ -55,7 +57,7 @@ end
 %     drone.position.y = 7;
 %     drone.position.z = 5;
     
-    pilot_position.z = 1;%round(H/10); %obni¿enie siê do wysokoœci 0.1 H w celu zrzucenia zaopatrzenia
+    pilot_position.z = 7;%round(H/10); %obni¿enie siê do wysokoœci 0.1 H w celu zrzucenia zaopatrzenia
     if (pilot_position.z == 0)
         pilot_position.z = 1;
     end

@@ -3,7 +3,7 @@
 %bêd¹ poszczególne funkcje programu
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% clear all
+%clear all
 %close all
 
 function [environment, drone, moves_and_states, message] = intelligent_drone(N, H, randomMode)
@@ -54,6 +54,7 @@ function [environment, drone, moves_and_states, message] = intelligent_drone(N, 
 
         %pocz¹tek tworzenia bazy wiedzy (odpowiada to funkcji TELL - baza
         %wiedzy bêdzie siê zmieniaæ w ka¿dym kroku symulacji
+        
 
         if (drone.pilot_position_achieved == false)
             [move_to_make] = inference(predicates, drone); 
@@ -62,7 +63,8 @@ function [environment, drone, moves_and_states, message] = intelligent_drone(N, 
             % aktualny po³o¿enie drona)
                 %odpowiada to funkcji ASK pytamy sie czy jestemy pod dzia³aniem radaru,
                 %czy gun
-            pilot_position_achieved_time = simulation_time;
+             pilot_position_achieved_time = simulation_time;
+             
         else
             move_to_make = moves_and_states.moves(pilot_position_achieved_time - move_to_make_from_backwards);
             move_to_make_from_backwards = move_to_make_from_backwards + 1;
@@ -127,7 +129,7 @@ function [environment, drone, moves_and_states, message] = intelligent_drone(N, 
         simulation_time = simulation_time + 1; %inkrementacja czasu symulacji po ka¿dym przejœciu pêtli
     end
     
-    [message] = analyze_results(drone, moves_and_states, simulation_time, message); %analiza rezultatów (dron w czasie)  
+    [message] = analyze_results(drone, moves_and_states, simulation_time, message, randomMode, N, H); %analiza rezultatów (dron w czasie)  
 
 end
 
