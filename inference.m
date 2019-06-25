@@ -71,15 +71,22 @@ function [move_to_make] = inference(predicates, drone)
     baza_wiedzy.reguly(7).konkluzja = MU;
     baza_wiedzy.reguly(8).przeslanki = [predicates.nRD, predicates.MD_p];
     baza_wiedzy.reguly(8).konkluzja = MD;
+    baza_wiedzy.reguly(9).przeslanki = [predicates.nGS, predicates.MF_p, nDL];
+    baza_wiedzy.reguly(9).konkluzja = MF;
+    baza_wiedzy.reguly(10).przeslanki = [predicates.nGS, predicates.MB_p, DL];
+    baza_wiedzy.reguly(10).konkluzja = MB;
+    baza_wiedzy.reguly(11).przeslanki = [predicates.nGR, predicates.MR_p]; 
+    baza_wiedzy.reguly(11).konkluzja = MR;
+    baza_wiedzy.reguly(12).przeslanki = [predicates.nGL, predicates.ML_p]; 
+    baza_wiedzy.reguly(12).konkluzja = ML;
+    baza_wiedzy.reguly(13).przeslanki = [predicates.nGU, predicates.MU_p]; 
+    baza_wiedzy.reguly(13).konkluzja = MU;
+    baza_wiedzy.reguly(14).przeslanki = [predicates.nGD, predicates.MD_p];
+    baza_wiedzy.reguly(14).konkluzja = MD;
     
-    %%Jaka jest orientacja sensorów, a jaka jest orientacja ruchwa
-    %Czy s¹ zgodne? Czy i co siê zmienia po osi¹gniêciu pozycji pilota
-    %
-    
-    % i = 8;
     i = length(baza_wiedzy.reguly);
     
-    if ((predicates.MB_p.wartosc && drone.pilot_position_achieved && predicates.nRS.wartosc)==true)
+    if ((predicates.MB_p.wartosc && drone.pilot_position_achieved && predicates.nRS.wartosc)==true) || ((predicates.MB_p.wartosc && drone.pilot_position_achieved && predicates.nGS.wartosc)==true)
         move_to_make.x = 0;
         move_to_make.y = -1;
         move_to_make.z = 0;
@@ -99,6 +106,13 @@ function [move_to_make] = inference(predicates, drone)
         baza_wiedzy.reguly(i).konkluzja = MR;
         i = i + 1;
     end
+    if (predicates.GS.wartosc && predicates.MB_p.wartosc && predicates.POP.wartosc)
+        predicates.MB_p.wartosc = false;
+        predicates.MR_p.wartosc = true;
+        baza_wiedzy.reguly(i).przeslanki = [predicates.nGL, predicates.MR_p];
+        baza_wiedzy.reguly(i).konkluzja = MR;
+        i = i + 1;
+    end
     
     if (predicates.RL.wartosc && predicates.MR_p.wartosc && predicates.POP.wartosc)
         predicates.MR_p.wartosc = false;
@@ -107,9 +121,21 @@ function [move_to_make] = inference(predicates, drone)
         baza_wiedzy.reguly(i).konkluzja = ML;
         i = i + 1;
     end
+    if (predicates.GL.wartosc && predicates.MR_p.wartosc && predicates.POP.wartosc)
+        predicates.MR_p.wartosc = false;
+        predicates.ML_p.wartosc = true;
+        baza_wiedzy.reguly(i).przeslanki = [predicates.nGR, predicates.ML_p];
+        baza_wiedzy.reguly(i).konkluzja = ML;
+        i = i + 1;
+    end
     
     if (predicates.RS.wartosc && predicates.MF_p.wartosc)
         baza_wiedzy.reguly(i).przeslanki = [predicates.RS, predicates.MF_p];
+        baza_wiedzy.reguly(i).konkluzja = MR;
+        i = i + 1;
+    end
+    if (predicates.GS.wartosc && predicates.MF_p.wartosc)
+        baza_wiedzy.reguly(i).przeslanki = [predicates.GS, predicates.MF_p];
         baza_wiedzy.reguly(i).konkluzja = MR;
         i = i + 1;
     end
@@ -121,9 +147,21 @@ function [move_to_make] = inference(predicates, drone)
         baza_wiedzy.reguly(i).konkluzja = ML;
         i = i + 1;
     end
+    if (predicates.GR.wartosc && predicates.MR_p.wartosc)
+        predicates.MR_p.wartosc = false;
+        predicates.ML_p.wartosc = true;
+        baza_wiedzy.reguly(i).przeslanki = [predicates.GR, predicates.MR_p];
+        baza_wiedzy.reguly(i).konkluzja = ML;
+        i = i + 1;
+    end
     
     if (predicates.RL.wartosc && predicates.ML_p.wartosc)
         baza_wiedzy.reguly(i).przeslanki = [predicates.RL, predicates.ML_p];
+        baza_wiedzy.reguly(i).konkluzja = MD;
+        i = i + 1;
+    end
+    if (predicates.GL.wartosc && predicates.ML_p.wartosc)
+        baza_wiedzy.reguly(i).przeslanki = [predicates.GL, predicates.ML_p];
         baza_wiedzy.reguly(i).konkluzja = MD;
         i = i + 1;
     end
@@ -226,7 +264,7 @@ function [move_to_make] = inference(predicates, drone)
     end
 
     %%Sprawdz wartosc logiczna predykatow "odpowiedzialnych za ruch"
-    move_predicates = [baza_wiedzy.reguly(3).konkluzja, baza_wiedzy.reguly(4).konkluzja, baza_wiedzy.reguly(5).konkluzja, baza_wiedzy.reguly(6).konkluzja, baza_wiedzy.reguly(7).konkluzja, baza_wiedzy.reguly(8).konkluzja];
+    move_predicates = [baza_wiedzy.reguly(3).konkluzja, baza_wiedzy.reguly(4).konkluzja, baza_wiedzy.reguly(5).konkluzja, baza_wiedzy.reguly(6).konkluzja, baza_wiedzy.reguly(7).konkluzja,baza_wiedzy.reguly(8).konkluzja];
     
     move_to_make = struct;
     move_to_make.x = 0;
