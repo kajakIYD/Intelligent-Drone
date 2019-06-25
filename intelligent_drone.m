@@ -8,7 +8,7 @@
 
 function [environment, drone, moves_and_states, message] = intelligent_drone(N, H, randomMode)
 
-    drone = struct %deklaracja struktury (dron bêdzie stuktur¹ przechowuj¹c¹ informacjê 
+    drone = struct; %deklaracja struktury (dron bêdzie stuktur¹ przechowuj¹c¹ informacjê 
     % o jego po³o¿eniu, wysokoœci, prêdkoœci, energii, zasiêgu czujnika)
 
     [drone, N, H, pilot_position] = get_simulation_parameters(drone, N, 10, H, 10, 50, 20, randomMode);
@@ -24,7 +24,7 @@ function [environment, drone, moves_and_states, message] = intelligent_drone(N, 
     environment = initialize_guns_and_radars(environment);
     %environment = env_backup;
 
-    predicates = struct %predykaty bêd¹ strukturami z przyjêtymi parametrami zdanie oraz wartoœæ logiczna
+    predicates = struct; %predykaty bêd¹ strukturami z przyjêtymi parametrami zdanie oraz wartoœæ logiczna
     %predicates.q = "Radar detected"/"Gun detected" // zdanie
     %predicates.value = true/false; //wartoœæ logiczna
     % zdanie i wartosc tworza predykat
@@ -34,29 +34,22 @@ function [environment, drone, moves_and_states, message] = intelligent_drone(N, 
     moves_and_states = struct; %ruchy i stan bêdzie to struktura przechowuj¹ca ruch, jaki zrobi³ dron oraz jego aktualny stan
     simulation_time = 1; %czas symulacji -- parametr inkrementowany po ka¿dym ruchu, aby móc obrazowaæ póŸniej przejœcie krok po kroku drona)
 
-    freezeTime = 3;
-    able_to_move = true;
+    freezeTime = 3; %zmienna ustalajaca czas zamrozenia drona w momencie gdy wejdzie w obszar oddzialywania radaru
+    able_to_move = true; %zmienna ustalajaca czy mozliwe jest wykonanie ruchu
 
-    predicates = struct;
+    predicates = struct; %predykaty beda struktura
 
-    message = '';
+    message = ''; %bufor na zbieranie informacji o przejsciu od agenta do pilota
 
-    move_to_make_from_backwards = 0;
-    pilot_position_achieved_time = 0;
+    move_to_make_from_backwards = 0; %ruch z powrotem zostanie zrealizowany jako odwrotnosc ruchu w przod
+    pilot_position_achieved_time = 0; %zmienna okreslajaca czas po jakim osiagnieto pozycje drona
 
     while ( drone.energy > 0  && drone.if_return_to_start ~= true ) %dopóki energia drona jest >0 i nie powróci³ do pozycji pocz¹tkowej
-        %%TODO ruch w gore: 
-        %%-reguly w bazie wiedzy, pierwszenstwo w funkcji
-        %%calculate_optimal_path
-        %%-"if y " w detect_danger_backward_orientation -> czyli fakty
-        %%niedopytywalne odnosnie wykrywania gun-a i radarów
-        %[x_start, x_end, y_start, y_end, z_start, z_end] = check_coordinates(drone, N, H); 
 
-        %[cube_to_pass, drone_relative_position] = environment( x_start:x_end, y_start:y_end, z_start:z_end); %zapisanie wycinka œrodowiska, który bêdzie nas interesowa³, przy analizie kolejnego jego ruchu
-        [predicates, drone] = check_pilot_presence(drone, pilot_position, predicates);
-        [optimal_path, predicates] = calculate_optimal_path(drone, predicates);
+        [predicates, drone] = check_pilot_presence(drone, pilot_position, predicates); %sprawdzenie czy dron nie znajduje sie nad pilotem
+        [optimal_path, predicates] = calculate_optimal_path(drone, predicates); %wyznaczenie optymalnej sciezki laczacej drona i pilota
 
-        drone = check_sensors_range(drone);
+        drone = check_sensors_range(drone); %Sprawdzenie zasiegu czujnikow (s¹ one zale¿ne od tego jak¹ wysokoœæ ma dron
         predicates = detect_danger(drone, environment, optimal_path, predicates); %wykryj zagro¿enie aktualizujemy wartosci predykatow za pomoc¹ parametru pozycji drona oraz drogi do przejœcia
 
         %pocz¹tek tworzenia bazy wiedzy (odpowiada to funkcji TELL - baza
