@@ -111,7 +111,7 @@ h(5) = plot3(drone.pilot_position.x, drone.pilot_position.y, drone.pilot_positio
 % h(3) - zielone, gun
 % h(4) - magenta, dron i pilot
 
-%legend(h, 'Puste pole', 'Radar', 'Gun', 'Drone - start', 'Pilot');
+legend(h, 'Puste pole', 'Radar', 'Gun', 'Drone - start', 'Pilot');
 
 %%%% Scenariusz 2
 %legend(h, 'Puste pole', 'Drone - start', 'Pilot');
