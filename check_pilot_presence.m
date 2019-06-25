@@ -1,6 +1,9 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sprawdzenie czy dron znalaz³ siê nad pilotem
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [predicates, drone] = check_pilot_presence(drone, pilot_position, predicates)
     
-    POP = struct %%Position Over Pilot
+    POP = struct; %%Position Over Pilot
     POP.nazwa = 'POP'; 
     POP.wartosc = false;
     POP.jest_ustawiony = true;
@@ -15,7 +18,7 @@ function [predicates, drone] = check_pilot_presence(drone, pilot_position, predi
         POP.wartosc = true;
     end
     
-    nPOP = struct %%Position Over Pilot
+    nPOP = struct; %%non Position Over Pilot
     nPOP.nazwa = 'nPOP'; 
     nPOP.wartosc = ~POP.wartosc;
     nPOP.jest_ustawiony = true;
