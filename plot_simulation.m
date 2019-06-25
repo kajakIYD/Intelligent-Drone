@@ -19,16 +19,16 @@ for k = 1:length(z)
    elseif (environment(i, 1, k) == 'g')
        h(3) = plot3(i, 1, k, 'gx');  
    else
-       h(1) = plot3(i, 1, k, 'b.')   
+       h(1) = plot3(i, 1, k, 'b.');   
    end
    hold on
    
    if (environment(i, length(y), k) == 'r')
-      h(2) = plot3(i, length(y), k, 'rx')
+      h(2) = plot3(i, length(y), k, 'rx');
    elseif (environment(i, length(y), k) == 'g')
-      h(3) = plot3(i, length(y), k, 'gx')   
+      h(3) = plot3(i, length(y), k, 'gx');   
    else
-      h(1) = plot3(i, length(y), k, 'b.')   
+      h(1) = plot3(i, length(y), k, 'b.');   
    end
    hold on
 end
@@ -37,20 +37,20 @@ end
 for j = 1:length(y)
 for k = 1:length(z)
    if (environment(1, j, k) == 'r')
-        h(2) = plot3(1, j, k, 'rx')
+        h(2) = plot3(1, j, k, 'rx');
    elseif (environment(1, j, k) == 'g')
-        h(3) = plot3(1, j, k, 'gx')   
+        h(3) = plot3(1, j, k, 'gx');   
    else
-       h(1) = plot3(1, j, k, 'b.')
+       h(1) = plot3(1, j, k, 'b.');
    end   
    hold on
    
    if (environment(length(x), j, k) == 'r')
-        h(2) = plot3(length(x), j, k, 'rx')
+        h(2) = plot3(length(x), j, k, 'rx');
    elseif (environment(length(x), j, k) == 'g')
-        h(3) = plot3(length(x), j, k, 'gx')   
+        h(3) = plot3(length(x), j, k, 'gx');   
    else
-        h(1) = plot3(length(x), j, k, 'b.')
+        h(1) = plot3(length(x), j, k, 'b.');
    end
    hold on
 end
@@ -59,20 +59,20 @@ end
 for j = 1:length(y)
 for i = 1:length(x)
    if (environment(i, j, 1) == 'r')
-        h(2) = plot3(i, j, 1, 'rx')
+        h(2) = plot3(i, j, 1, 'rx');
    elseif (environment(i, j, 1) == 'g')
-        h(3) = plot3(i, j, 1, 'gx')   
+        h(3) = plot3(i, j, 1, 'gx');   
    else
-        h(1) = plot3(i, j, 1, 'b.')
+        h(1) = plot3(i, j, 1, 'b.');
    end
    hold on
    
    if (environment(i, j, length(z)) == 'r')
-        h(2) = plot3(i, j, length(z), 'rx')
+        h(2) = plot3(i, j, length(z), 'rx');
    elseif (environment(i, j, length(z)) == 'g')
-        h(3) = plot3(i, j, length(z), 'gx')   
+        h(3) = plot3(i, j, length(z), 'gx');   
    else
-        h(1) = plot3(i, j, length(z), 'b.')
+        h(1) = plot3(i, j, length(z), 'b.');
    end
    
    hold on
@@ -99,7 +99,7 @@ end
 
 h(4) = plot3(drone.initial_position.x, drone.initial_position.y, drone.initial_position.z, 'm*');
 hold on
-h(5) = plot3(drone.pilot_position.x, drone.pilot_position.y, drone.pilot_position.z, 'y*');
+h(5) = plot3(drone.pilot_position.x, drone.pilot_position.y, drone.pilot_position.z, 'c*');
 
 %%Legenda dla kazdego rodzaju oznaczenia
 % h(1) - puste pole
