@@ -22,7 +22,7 @@ function varargout = GUI(varargin)
 
 % Edit the above text to modify the response to help GUI
 
-% Last Modified by GUIDE v2.5 24-Jun-2019 21:29:20
+% Last Modified by GUIDE v2.5 24-Jun-2019 23:26:59
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -114,7 +114,7 @@ function checkbox1_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of checkbox1
 
 global randomMode
-randomMode = get(hObject,'Value') ;
+randomMode = get(hObject,'Value');
 
 end
 
