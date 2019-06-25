@@ -7,7 +7,7 @@ function [message] = analyze_results(drone, moves_and_states, simulation_time, m
         message  = [message 'Misja zakoñczona niepowodzeniem' newline];
     end
     
-    message  = [message 'Symulacja trwa³a: ' num2str(simulation_time) newline];
+    message  = [message 'Symulacja trwa³a: ' num2str(simulation_time) ' iteracji ' newline];
     
     suma = 0;
     for move = moves_and_states.moves
