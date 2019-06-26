@@ -79,6 +79,21 @@ for i = 1:length(x)
 end
 end
 
+for k = 2:length(z)-1
+for j = 2:length(y)-1
+for i = 2:length(x)-1
+   if (environment(i, j, k) == 'r')
+        h(2) = plot3(i, j, k, 'rx');
+   elseif (environment(i, j, k) == 'g')
+        h(3) = plot3(i, j, k, 'gx');   
+   else
+        h(1) = plot3(i, j, k, 'b.');
+   end
+   hold on
+end
+end
+end
+
 drone_position_i = drone.initial_position;
 for i = 1:length(moves_and_states.moves)
     drone_position_i_1.x = moves_and_states.moves(i).x;
@@ -107,7 +122,21 @@ h(5) = plot3(drone.pilot_position.x, drone.pilot_position.y, drone.pilot_positio
 % h(3) - zielone, gun
 % h(4) - magenta, dron i pilot
 
-legend(h, 'Puste pole', 'Radar', 'Gun', 'Drone - start', 'Pilot');
+if find(h==0)
+    if (h(2) == 0 && h(3) ~= 0)
+        h_new = [h(1) h(3) h(4) h(5)];
+        legend(h_new, 'Puste pole', 'Gun', 'Drone - start', 'Pilot');
+    elseif (h(2) ~= 0 && h(3) == 0)
+        h_new = [h(1) h(2) h(4) h(5)];
+        legend(h_new, 'Puste pole', 'Radar', 'Drone - start', 'Pilot');  
+    elseif (h(2) == 0 && h(3) == 0)
+        h_new = [h(1)  h(4) h(5)];
+        legend(h_new, 'Puste pole', 'Drone - start', 'Pilot');  
+    else
+        legend(h, 'Puste pole', 'Radar', 'Gun', 'Drone - start', 'Pilot');    
+    end
+end
 
+hold off
 
 end

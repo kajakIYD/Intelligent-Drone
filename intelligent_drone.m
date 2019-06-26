@@ -6,12 +6,13 @@
 % clear all
 %close all
 
-function [environment, drone, moves_and_states, message] = intelligent_drone(N, H, randomMode)
+function [environment, drone, moves_and_states, message] = intelligent_drone(N, H, randomMode, initial_energy)
 
     drone = struct; %deklaracja struktury (dron bêdzie stuktur¹ przechowuj¹c¹ informacjê 
     % o jego po³o¿eniu, wysokoœci, prêdkoœci, energii, zasiêgu czujnika)
-
-    [drone, N, H, pilot_position] = get_simulation_parameters(drone, N, 10, H, 10, 50, 20, randomMode);
+    %8
+    [drone, N, H, pilot_position] = get_simulation_parameters(drone, N, 10, H, 10, initial_energy, 20, randomMode);
+    %[drone, N, H, pilot_position] = get_simulation_parameters(drone, N, 10, H, 10, 50, 20, randomMode);
     %pilot_position = pilot_position_backup;
     %drone.initial_position = drone_init_pos_backup;
 

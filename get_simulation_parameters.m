@@ -12,25 +12,29 @@ if (randomMode == true)
     H = round((H_max  - H_min) * rand(1)) + H_min; %wysokoœæ
 
     N = round((N_max - N_min) * rand(1)) + N_min;  %szerokoœæ, g³êbokoœæ
+    
+    initial_energy = (initial_energy_max - initial_energy_min) * rand(1) + initial_energy_min; % inicjalizacja wartoœci¹ pocz¹tkow¹ energii
 else
     %%Parametry ustawiane na sztywno
     N = N_max;
     H = H_max;
+    
+    initial_energy = initial_energy_max;
 end
     
     %Pozycja pocz¹tkowa jako struktura (x,y,z)
 
     initial_position = struct;
-    initial_position.x = 1; %round((N - 1) * rand(1)) + 1; %9; 8; 10; 1;
-    initial_position.y = 3; %round((N - 1) * rand(1)) + 1; %9; 5; 4; 3;
-    initial_position.z = 7; %round((H - 1) * rand(1)) + 1; %4; 5; 6; 7;
+    initial_position.x = 9; %round((N - 1) * rand(1)) + 1; %9; 8; 10; 1;
+    initial_position.y = 9; %round((N - 1) * rand(1)) + 1; %9; 5; 4; 3;
+    initial_position.z = 8; %round((H - 1) * rand(1)) + 1; %4; 5; 6; 7;
 
     drone.position = initial_position; %inicjalizacja wartoœci¹ pocz¹tkow¹ pozycji drona
     drone.initial_position = initial_position;
 
     initial_speed = 1; % inicjalizacja wartoœci¹ pocz¹tkow¹ prêdkoœci
 
-    initial_energy = (initial_energy_max - initial_energy_min) * rand(1) + initial_energy_min; % inicjalizacja wartoœci¹ pocz¹tkow¹ energii
+    
 
     drone.speed = initial_speed; %przypisanie do prêdkoœci drona wartoœci zainicjalizowanej
 
@@ -43,9 +47,9 @@ end
 
     pilot_position= struct;
 
-    pilot_position.x = 3;
+    pilot_position.x = 4;
 
-    pilot_position.y = 5;
+    pilot_position.y = 4;
 
 % For debugging only
 %     N = 11;
@@ -55,7 +59,7 @@ end
 %     drone.position.y = 7;
 %     drone.position.z = 5;
     
-    pilot_position.z = 1;%round(H/10); %obni¿enie siê do wysokoœci 0.1 H w celu zrzucenia zaopatrzenia
+    pilot_position.z = 4;%round(H/10); %obni¿enie siê do wysokoœci 0.1 H w celu zrzucenia zaopatrzenia
     if (pilot_position.z == 0)
         pilot_position.z = 1;
     end

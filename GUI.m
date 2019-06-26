@@ -22,7 +22,7 @@ function varargout = GUI(varargin)
 
 % Edit the above text to modify the response to help GUI
 
-% Last Modified by GUIDE v2.5 24-Jun-2019 23:26:59
+% Last Modified by GUIDE v2.5 26-Jun-2019 21:17:07
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -85,9 +85,9 @@ function start_button_Callback(hObject, eventdata, handles)
 % hObject    handle to start_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    global randomMode N_num H_num
-
-    [environment, drone, moves_and_states, message] = intelligent_drone(N_num, H_num, randomMode);
+    global randomMode N_num H_num initial_energy
+    
+    [environment, drone, moves_and_states, message] = intelligent_drone(N_num, H_num, randomMode, initial_energy)
     
     plot_simulation(environment, drone, moves_and_states); % prezentacja wyników po zebraniu symulacji
     rotate3d(handles.simulation_plot3D);    
@@ -194,6 +194,36 @@ end
 % --- Executes during object creation, after setting all properties.
 function H_listbox_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to H_listbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+end
+
+
+% --- Executes on selection change in listbox4.
+function listbox4_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listbox4 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox4
+contents = cellstr(get(hObject,'String'));
+initial_energy_string = contents{get(hObject,'Value')};
+
+global initial_energy
+initial_energy = str2num(initial_energy_string);
+
+end
+
+% --- Executes during object creation, after setting all properties.
+function listbox4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listbox4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
